@@ -15,10 +15,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response.Status;
 
 /**
  *
@@ -30,13 +31,14 @@ public class ServletLogin extends HttpServlet{
         Metodo para solicitudes POST
     */
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse res){
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException{
         
        BufferedReader reader;
        String line;
        StringBuffer responseContent = new StringBuffer();
+       RequestDispatcher dispatcher;
         try {
-            
+          
             PrintWriter out = res.getWriter();
             
             String usuario = req.getParameter("user");
@@ -93,13 +95,17 @@ public class ServletLogin extends HttpServlet{
                 out.println("</body>");
                 out.println("</html>");
             }else{
+                req.setAttribute("prueba", "Mensajito");
+                System.out.println("Si entro");
+                
                 if (usuario.equals("mercado")) {
-                    res.sendRedirect("MenuMercado.html");
+                    dispatcher = req.getRequestDispatcher("MenuMercado.jsp");
                 }else if(usuario.equals("profeco")){
-                    res.sendRedirect("MenuProfeco.html");
+                    dispatcher = req.getRequestDispatcher("MenuProfeco.jsp");
                 }else{
-                    res.sendRedirect("MenuConsumidor.html");
+                    dispatcher = req.getRequestDispatcher("MenuConsumidor.jsp");
                 }
+                dispatcher.forward(req, res);
             }
 
         } catch (IOException ex) {

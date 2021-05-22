@@ -1,9 +1,11 @@
+<%-- 
+    Document   : MenuProfeco
+    Created on : May 22, 2021, 12:36:18 PM
+    Author     : Lenovo
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <link href="estilos/estilosIndex.css" rel="stylesheet" type="text/css"/>
@@ -15,25 +17,19 @@ and open the template in the editor.
         
         
         <header>
-            <h2> Menú mercados </h2>
+            <h2> Menú Profeco </h2>
             
         </header>
         
         <nav>
             <ul>
-                
-                <li><a href="clientes.html">Subir producto</a></li>
-                <li><a href="videojuegos.html">Quitar producto</a></li>
-                <li><a href="rentas.html">Editar producto</a></li>
-                <li><a href="inventario.html">Ver producto</a></li>
-                <li><a href="inventario.html">Reportes</a></li>
-                
+                <li><a href="clientes.html">Castigos y multas</a></li>
             </ul>
             
         </nav>
          <article>
             
-             <h1>¡Bienvenido al menu de mercados</h1>
+             <h1>¡Bienvenido al menu de Profeco</h1>
             <h2>Selecciona una opción de nuestro menú de navegación a la izquierda para empezar.</h2>
             <h3>¡No te vas a perder!</h3>
         </article>
@@ -46,3 +42,4 @@ and open the template in the editor.
         
     </body>
 </html>
+

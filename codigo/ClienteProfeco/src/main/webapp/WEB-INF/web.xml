@@ -4,9 +4,33 @@
         <servlet-name>servlet1</servlet-name>
         <servlet-class>servlets.ServletLogin</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>servlet2</servlet-name>
+        <servlet-class>servlets.ServletConsumidor</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>servlet3</servlet-name>
+        <servlet-class>servlets.ServletMercado</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>servlet4</servlet-name>
+        <servlet-class>servlets.ServletProfeco</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>servlet1</servlet-name>
         <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>servlet2</servlet-name>
+        <url-pattern>/consumidor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>servlet3</servlet-name>
+        <url-pattern>/mercado</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>servlet4</servlet-name>
+        <url-pattern>/profeco</url-pattern>
     </servlet-mapping>
     
 </web-app>
