@@ -5,9 +5,11 @@
  */
 package servlets;
 
+import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -22,23 +24,44 @@ import javax.servlet.http.HttpServletResponse;
  * @author Lenovo
  */
 
-public class ServletProducto extends HttpServlet{
-    
+public class ServletLogin extends HttpServlet{
+    /*
+        Metodo para solicitudes POST
+    */
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse res){
+    public void doPost(HttpServletRequest req, HttpServletResponse res){
         
        BufferedReader reader;
        String line;
        StringBuffer responseContent = new StringBuffer();
         try {
+            
             PrintWriter out = res.getWriter();
-            URL url = new URL("http://localhost:9999/profeco/consumidor/chetis");
+            
+            String usuario = req.getParameter("user");
+            String contra = req.getParameter("password");
+    
+
+            Usuario usuarioObj = new Usuario(0, usuario, contra, "asdf");
+            URL url = new URL("http://localhost:9999/profeco/login");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
+            con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");
             con.setRequestProperty("Accept", "application/json");
             con.setDoOutput(true);
             con.setDoInput(true);
+            
+            Gson gson = new Gson();
+            String jsonInputString = gson.toJson(usuarioObj);
+
+            //Pasar los datos al url
+            System.out.println("Json " + jsonInputString);
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes();
+                os.write(input, 0, input.length);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             
             int status = con.getResponseCode();
             //Respuesta de la solicitud
@@ -57,13 +80,17 @@ public class ServletProducto extends HttpServlet{
             reader.close();
             System.out.println(responseContent.toString());
             
+            if (usuario.equals("mercado")) {
+                res.sendRedirect("MenuMercado.html");
+            }else if(usuario.equals("profeco")){
+                res.sendRedirect("MenuProfeco.html");
+            }else{
+                res.sendRedirect("MenuConsumidor.html");
+            }
         } catch (IOException ex) {
-            Logger.getLogger(ServletProducto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServletLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-    
-    public void doPost(HttpServletRequest req, HttpServletResponse res){
-        
-    }
+
 }

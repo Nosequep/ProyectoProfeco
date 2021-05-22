@@ -8,11 +8,11 @@
 package com.profeco.filter;
 
 import java.io.IOException;
+import javafx.animation.Animation.Status;
 
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -20,7 +20,8 @@ import javax.servlet.ServletResponse;
 
 
 
-import org.springframework.core.annotation.Order;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,9 +37,27 @@ public class JWTAuthorizationFilter implements Filter{
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        System.out.println("Entra en el filtro");
-        chain.doFilter(request, response);
-       
+        
+        HttpServletRequest req = (HttpServletRequest)request;
+        HttpServletResponse res = (HttpServletResponse)response;
+        String method = req.getMethod();
+        String path = req.getRequestURI();
+        System.out.println("Method: " + method);
+        System.out.println("Path: " + path);
+        
+        if(method.equals("POST") && path.contains("login")){
+            System.out.println("Entrando al filtro");
+            chain.doFilter(request, response);
+        }else{
+            String token = req.getHeader(AUTHENTICATION_HEADER);
+            System.out.println("Token: " +  token);
+            if(token != null){
+                System.out.println("Verificar token");
+            }else{
+                //throw new WebApplicationException(Status.UNAUTHORIZED);
+            }
+        }
+        
         
     }
 

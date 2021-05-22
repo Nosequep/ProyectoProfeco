@@ -6,6 +6,10 @@ import componente.comercio.Comercio;
 import componente.consumidor.Consumidor;
 import componente.profeco.Profeco;
 import java.util.List;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
+
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +20,9 @@ import dao.ProductoDAO;
 import dao.SancionDAO;
 import entities.Producto;
 import entities.Sancion;
+import javax.json.Json;
+import javax.json.JsonObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,11 +37,32 @@ public class ProfecoREST {
             this.daoProducto = new ProductoDAO();
             this.daoSancion = new SancionDAO();
         }
+        
+        @PostMapping("login")
+	public ResponseEntity<String> logear(@RequestBody Usuario usuario){
+            System.out.println("Metodo login");
+            boolean status = ValidarLogin.validar(usuario);
+            String token = null;
+            if (status) {
 
-        @GetMapping
-        public void hola(){
-            
-        }
+                try {
+                    Algorithm algorithm = Algorithm.HMAC256("millave");
+                    token = JWT.create()
+                            .withIssuer("auth0")
+                            .sign(algorithm)
+                            ;
+
+                } catch (JWTCreationException e) {
+                    e.printStackTrace();
+                }
+                JsonObject json = Json.createObjectBuilder()
+                                    .add("JWT", token).build();
+
+
+                return ResponseEntity.ok(json.toString());
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	}
         
 	@GetMapping("consumidor/{nombreProducto}")
 	public ResponseEntity<List<Producto>> compararProductos(@PathVariable("nombreProducto")String nombre){

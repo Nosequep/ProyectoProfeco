@@ -3,6 +3,8 @@
   <persistence-unit name="com.profeco_AccesoDatosProfeco_jar_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.profeco.entidades.Usuario</class>
+    <class>com.profeco.entidades.Comercio</class>
+    <class>com.profeco.entidades.Producto</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/profeco?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
