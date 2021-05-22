@@ -9,6 +9,8 @@ import java.util.List;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 import org.springframework.http.ResponseEntity;
@@ -49,17 +51,15 @@ public class ProfecoREST {
                     Algorithm algorithm = Algorithm.HMAC256("millave");
                     token = JWT.create()
                             .withIssuer("auth0")
-                            .sign(algorithm)
-                            ;
-
+                            .sign(algorithm);
+                    System.out.println(token);
                 } catch (JWTCreationException e) {
                     e.printStackTrace();
                 }
-                JsonObject json = Json.createObjectBuilder()
-                                    .add("JWT", token).build();
-
-
-                return ResponseEntity.ok(json.toString());
+                
+                Gson gson = new Gson();
+                String json = gson.toJson(token);
+                return ResponseEntity.ok(json);
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}

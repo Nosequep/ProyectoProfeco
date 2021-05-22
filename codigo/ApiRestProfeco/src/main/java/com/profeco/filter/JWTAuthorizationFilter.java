@@ -8,7 +8,6 @@
 package com.profeco.filter;
 
 import java.io.IOException;
-import javafx.animation.Animation.Status;
 
 
 import javax.servlet.Filter;
@@ -22,6 +21,8 @@ import javax.servlet.ServletResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
 import org.springframework.stereotype.Component;
 
 /**
@@ -53,12 +54,11 @@ public class JWTAuthorizationFilter implements Filter{
             System.out.println("Token: " +  token);
             if(token != null){
                 System.out.println("Verificar token");
+                chain.doFilter(request, response);
             }else{
                 //throw new WebApplicationException(Status.UNAUTHORIZED);
             }
         }
-        
-        
     }
 
 }

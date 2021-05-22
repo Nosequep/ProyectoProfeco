@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response.Status;
 
 /**
  *
@@ -67,26 +68,40 @@ public class ServletLogin extends HttpServlet{
             //Respuesta de la solicitud
             if(status > 299){
                 //Cuando un error
-                reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                //reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }else{
                 //Cuando la solicitud es exitosa
+                //Leer lo obtenido de la respuesta
                 reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                while((line = reader.readLine()) != null){
+                    responseContent.append(line);
+                }
+                reader.close();
+                 System.out.println(responseContent.toString());
             }
-           
-            //Leer lo obtenido de la respuesta
-            while((line = reader.readLine()) != null){
-                responseContent.append(line);
-            }
-            reader.close();
-            System.out.println(responseContent.toString());
             
-            if (usuario.equals("mercado")) {
-                res.sendRedirect("MenuMercado.html");
-            }else if(usuario.equals("profeco")){
-                res.sendRedirect("MenuProfeco.html");
+            status = con.getResponseCode();
+            if(status > 299){
+                out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("<head>");
+                out.println("<title>Regrese al login e ingrese una credencial valida</title>");
+                out.println("</head>");
+                out.println("<body>");
+                out.println("<h1> Credenciales invalidas</h1>");
+                out.println("<a href=\"index.html#\">LOGIN</a>");
+                out.println("</body>");
+                out.println("</html>");
             }else{
-                res.sendRedirect("MenuConsumidor.html");
+                if (usuario.equals("mercado")) {
+                    res.sendRedirect("MenuMercado.html");
+                }else if(usuario.equals("profeco")){
+                    res.sendRedirect("MenuProfeco.html");
+                }else{
+                    res.sendRedirect("MenuConsumidor.html");
+                }
             }
+
         } catch (IOException ex) {
             Logger.getLogger(ServletLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
