@@ -1,16 +1,21 @@
 package dao;
 
+import com.profeco.controladores.ProductoJpaController;
+import com.profeco.entidades.Producto;
 import java.util.ArrayList;
 import java.util.List;
 
-import entities.Producto;
 
 public class ProductoDAO {
 
-    private ArrayList<Producto> productos;
+    private List<Producto> productos;
 
+    
+    private ProductoJpaController productoJPA;
+    
     public ProductoDAO() {
-        this.productos = new ArrayList<Producto>();
+        productoJPA = new ProductoJpaController();
+        this.productos = productoJPA.findProductoEntities();
     }
 
     public List<Producto> obtener(String nombre) {
@@ -21,6 +26,16 @@ public class ProductoDAO {
             }
         }
         return nuevo;
+    }
+    
+    public List<Producto> obtenerOfertas(){
+        ArrayList<Producto> ofertas = new ArrayList<Producto>();
+        for (Producto producto : productos) {
+            if (producto.getOferta() > 0.00) {
+                ofertas.add(producto);
+            }
+        }
+        return ofertas;
     }
 
     public Producto editarProducto(){

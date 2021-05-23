@@ -5,8 +5,9 @@
  */
 package dao;
 
-import entities.Producto;
-import entities.Sancion;
+
+import com.profeco.controladores.SancionJpaController;
+import com.profeco.entidades.Sancion;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +16,13 @@ import java.util.List;
  * @author Lenovo
  */
 public class SancionDAO {
-    private ArrayList<Sancion> sancion;
+    private List<Sancion> sancion;
+    private SancionJpaController sancionJPA;
     
     
     public SancionDAO(){
-        this.sancion = new ArrayList();
+        sancionJPA = new SancionJpaController();
+        this.sancion = sancionJPA.findSancionEntities();
 
         
     }

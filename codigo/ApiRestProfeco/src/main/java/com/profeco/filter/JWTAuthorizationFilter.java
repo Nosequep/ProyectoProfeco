@@ -52,12 +52,12 @@ public class JWTAuthorizationFilter implements Filter{
         }else{
             String token = req.getHeader(AUTHENTICATION_HEADER);
             System.out.println("Token: " +  token);
-            if(token != null){
+//            if(token != null){
                 System.out.println("Verificar token");
                 chain.doFilter(request, response);
-            }else{
-                //throw new WebApplicationException(Status.UNAUTHORIZED);
-            }
+//            }else{
+//                //throw new WebApplicationException(Status.UNAUTHORIZED);
+//            }
         }
     }
 
