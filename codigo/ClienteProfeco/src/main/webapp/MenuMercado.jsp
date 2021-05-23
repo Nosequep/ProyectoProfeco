@@ -25,7 +25,7 @@
             <ul>
                 
                 <li><a href="AgregarProducto.jsp">Subir producto</a></li>
-                <li><a href="videojuegos.html">Quitar producto</a></li>
+                <li><a href="consumidor?solicitud=eliminarProducto">Quitar producto</a></li>
                 <li><a href="rentas.html">Editar producto</a></li>
                 <li><a href="inventario.html">Ver producto</a></li>
                 <li><a href="inventario.html">Reportes</a></li>

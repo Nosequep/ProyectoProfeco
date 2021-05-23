@@ -37,6 +37,7 @@ public class ServletConsumidor extends HttpServlet{
     
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException{
-        
+        String solicitud = req.getParameter("solicitud");
+        System.out.println("Solicitud " + solicitud);
     }
 }
