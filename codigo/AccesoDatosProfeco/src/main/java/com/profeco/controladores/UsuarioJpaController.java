@@ -5,18 +5,22 @@
  */
 package com.profeco.controladores;
 
+import com.profeco.controladores.exceptions.IllegalOrphanException;
 import com.profeco.controladores.exceptions.NonexistentEntityException;
 import com.profeco.controladores.exceptions.PreexistingEntityException;
-import com.profeco.entidades.Usuario;
 import java.io.Serializable;
+import javax.persistence.Query;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import com.profeco.entidades.Comercio;
+import com.profeco.entidades.Usuario;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.Persistence;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 /**
  *
@@ -34,11 +38,29 @@ public class UsuarioJpaController implements Serializable {
     }
 
     public void create(Usuario usuario) throws PreexistingEntityException, Exception {
+        if (usuario.getComercioCollection() == null) {
+            usuario.setComercioCollection(new ArrayList<Comercio>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Collection<Comercio> attachedComercioCollection = new ArrayList<Comercio>();
+            for (Comercio comercioCollectionComercioToAttach : usuario.getComercioCollection()) {
+                comercioCollectionComercioToAttach = em.getReference(comercioCollectionComercioToAttach.getClass(), comercioCollectionComercioToAttach.getIdcomercio());
+                attachedComercioCollection.add(comercioCollectionComercioToAttach);
+            }
+            usuario.setComercioCollection(attachedComercioCollection);
             em.persist(usuario);
+            for (Comercio comercioCollectionComercio : usuario.getComercioCollection()) {
+                Usuario oldIdusuarioOfComercioCollectionComercio = comercioCollectionComercio.getIdusuario();
+                comercioCollectionComercio.setIdusuario(usuario);
+                comercioCollectionComercio = em.merge(comercioCollectionComercio);
+                if (oldIdusuarioOfComercioCollectionComercio != null) {
+                    oldIdusuarioOfComercioCollectionComercio.getComercioCollection().remove(comercioCollectionComercio);
+                    oldIdusuarioOfComercioCollectionComercio = em.merge(oldIdusuarioOfComercioCollectionComercio);
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findUsuario(usuario.getIdusuario()) != null) {
@@ -52,12 +74,45 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public void edit(Usuario usuario) throws NonexistentEntityException, Exception {
+    public void edit(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Usuario persistentUsuario = em.find(Usuario.class, usuario.getIdusuario());
+            Collection<Comercio> comercioCollectionOld = persistentUsuario.getComercioCollection();
+            Collection<Comercio> comercioCollectionNew = usuario.getComercioCollection();
+            List<String> illegalOrphanMessages = null;
+            for (Comercio comercioCollectionOldComercio : comercioCollectionOld) {
+                if (!comercioCollectionNew.contains(comercioCollectionOldComercio)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Comercio " + comercioCollectionOldComercio + " since its idusuario field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Collection<Comercio> attachedComercioCollectionNew = new ArrayList<Comercio>();
+            for (Comercio comercioCollectionNewComercioToAttach : comercioCollectionNew) {
+                comercioCollectionNewComercioToAttach = em.getReference(comercioCollectionNewComercioToAttach.getClass(), comercioCollectionNewComercioToAttach.getIdcomercio());
+                attachedComercioCollectionNew.add(comercioCollectionNewComercioToAttach);
+            }
+            comercioCollectionNew = attachedComercioCollectionNew;
+            usuario.setComercioCollection(comercioCollectionNew);
             usuario = em.merge(usuario);
+            for (Comercio comercioCollectionNewComercio : comercioCollectionNew) {
+                if (!comercioCollectionOld.contains(comercioCollectionNewComercio)) {
+                    Usuario oldIdusuarioOfComercioCollectionNewComercio = comercioCollectionNewComercio.getIdusuario();
+                    comercioCollectionNewComercio.setIdusuario(usuario);
+                    comercioCollectionNewComercio = em.merge(comercioCollectionNewComercio);
+                    if (oldIdusuarioOfComercioCollectionNewComercio != null && !oldIdusuarioOfComercioCollectionNewComercio.equals(usuario)) {
+                        oldIdusuarioOfComercioCollectionNewComercio.getComercioCollection().remove(comercioCollectionNewComercio);
+                        oldIdusuarioOfComercioCollectionNewComercio = em.merge(oldIdusuarioOfComercioCollectionNewComercio);
+                    }
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -75,7 +130,7 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -86,6 +141,17 @@ public class UsuarioJpaController implements Serializable {
                 usuario.getIdusuario();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            Collection<Comercio> comercioCollectionOrphanCheck = usuario.getComercioCollection();
+            for (Comercio comercioCollectionOrphanCheckComercio : comercioCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Usuario (" + usuario + ") cannot be destroyed since the Comercio " + comercioCollectionOrphanCheckComercio + " in its comercioCollection field has a non-nullable idusuario field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             em.remove(usuario);
             em.getTransaction().commit();

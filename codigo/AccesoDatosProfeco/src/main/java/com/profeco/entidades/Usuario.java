@@ -6,14 +6,18 @@
 package com.profeco.entidades;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -44,6 +48,8 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @Column(name = "rol")
     private String rol;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idusuario")
+    private Collection<Comercio> comercioCollection;
 
     public Usuario() {
     }
@@ -89,6 +95,15 @@ public class Usuario implements Serializable {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    @XmlTransient
+    public Collection<Comercio> getComercioCollection() {
+        return comercioCollection;
+    }
+
+    public void setComercioCollection(Collection<Comercio> comercioCollection) {
+        this.comercioCollection = comercioCollection;
     }
 
     @Override

@@ -6,6 +6,7 @@
 package servlets;
 
 import com.google.gson.Gson;
+import com.profeco.entidades.Usuario;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

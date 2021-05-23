@@ -6,6 +6,8 @@
 package servlets;
 
 import com.google.gson.Gson;
+import com.profeco.entidades.Comercio;
+import com.profeco.entidades.Producto;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,7 +34,73 @@ public class ServletMercado extends HttpServlet{
     */
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException{
+        BufferedReader reader;
+        String line;
+        StringBuffer responseContent = new StringBuffer();
+        RequestDispatcher dispatcher;
+        try {
+          
+            PrintWriter out = res.getWriter();
+    
+            String nombre = req.getParameter("nombre");
+            String comercio = req.getParameter("comercio");
+            String precio = req.getParameter("precio");
+            String oferta = req.getParameter("oferta");
+            String solicitud = req.getParameter("solicitud");
+            System.out.println("Solicitud " + solicitud);
+            URL url = null;
+            HttpURLConnection con = null;
+            String jsonInputString = null;
+            if(solicitud.equals("subirProducto")){
+                
+                Producto producto = new Producto();
+                producto.setNombre(nombre);
+                producto.setPrecio(Double.parseDouble(precio));
+                producto.setOferta(Double.parseDouble(oferta));
+                producto.setIdcomercio(new Comercio(Integer.parseInt(comercio)));
 
+                url = new URL("http://localhost:9999/profeco/subirProducto");
+                con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", "token");
+                con.setDoOutput(true);
+                con.setDoInput(true);
+                Gson gson = new Gson();
+                jsonInputString = gson.toJson(producto);
+            }
+            
+            //Pasar los datos al url
+            System.out.println("Json " + jsonInputString);
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes();
+                os.write(input, 0, input.length);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            int status = con.getResponseCode();
+            System.out.println("codigo " + status);
+            //Respuesta de la solicitud
+            if(status > 299){
+                //Cuando un error
+                //reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                dispatcher = req.getRequestDispatcher("paginaError.jsp");
+            }else{
+                //Cuando la solicitud es exitosa
+                //Leer lo obtenido de la respuesta
+                reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                while((line = reader.readLine()) != null){
+                    responseContent.append(line);
+                }
+                reader.close();
+                 System.out.println(responseContent.toString());
+
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ServletLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override

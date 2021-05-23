@@ -2,15 +2,15 @@ package com.profeco.rest;
 
 import com.profeco.controladores.UsuarioJpaController;
 import com.profeco.entidades.Usuario;
-import componente.comercio.Comercio;
-import componente.consumidor.Consumidor;
-import componente.profeco.Profeco;
+import com.profeco.entidades.Producto;
+
 import java.util.List;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.profeco.controladores.ProductoJpaController;
+
 
 
 import org.springframework.http.ResponseEntity;
@@ -18,12 +18,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dao.ProductoDAO;
-import dao.SancionDAO;
-import entities.Producto;
+
+
 import entities.Sancion;
-import javax.json.Json;
-import javax.json.JsonObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,13 +31,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("profeco")
 public class ProfecoREST {
-	private ProductoDAO daoProducto;
-        private SancionDAO daoSancion;
-        
-        public ProfecoREST(){
-            this.daoProducto = new ProductoDAO();
-            this.daoSancion = new SancionDAO();
-        }
         
         @PostMapping("login")
 	public ResponseEntity<String> logear(@RequestBody Usuario usuario){
@@ -64,21 +56,30 @@ public class ProfecoREST {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
         
+        @PostMapping("subirProducto")
+	public ResponseEntity subirProducto(@RequestBody String producto){
+            System.out.println("Agregando oprooducto " + producto);
+            ProductoJpaController jpaController = new ProductoJpaController();
+            Gson gson =  new Gson();
+            Producto p = gson.fromJson(producto, Producto.class);
+            try {
+                jpaController.create(p);
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } catch (Exception ex) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+	}
+        
+        /*
 	@GetMapping("consumidor/{nombreProducto}")
 	public ResponseEntity<List<Producto>> compararProductos(@PathVariable("nombreProducto")String nombre){
-		Consumidor consumidor = new Consumidor(this.daoProducto);
+		//Consumidor consumidor = new Consumidor(this.daoProducto);
                 System.out.println("Entrando a");
 		return ResponseEntity.ok(consumidor.getProductByName(nombre));
 	}
         
        
-        @PostMapping()
-	public ResponseEntity<Sancion> determinarSancion(@RequestBody String sancion){
-            System.out.println("Entra posteo" + sancion);
-            Profeco profeco = new Profeco(this.daoSancion);
-            Sancion s = profeco.sancionar(sancion);
-            return ResponseEntity.ok(s);
-	}
+        
         
         @RequestMapping(value="comercio")
 	public ResponseEntity<List<Sancion>> showSanciones(){
@@ -92,6 +93,6 @@ public class ProfecoREST {
             UsuarioJpaController jpa = new UsuarioJpaController();
 		return ResponseEntity.ok(jpa.findUsuario(1));
 	}
-        
+        */
         
 }

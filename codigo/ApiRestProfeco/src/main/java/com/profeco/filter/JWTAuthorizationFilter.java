@@ -56,6 +56,7 @@ public class JWTAuthorizationFilter implements Filter{
                 System.out.println("Verificar token");
                 chain.doFilter(request, response);
             }else{
+                System.out.println("Token no validado");
                 //throw new WebApplicationException(Status.UNAUTHORIZED);
             }
         }
