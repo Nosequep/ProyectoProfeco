@@ -5,6 +5,12 @@
     <class>com.profeco.entidades.Usuario</class>
     <class>com.profeco.entidades.Comercio</class>
     <class>com.profeco.entidades.Producto</class>
+    <class>com.profeco.entidades.Inconsistencias</class>
+    <class>com.profeco.entidades.Producto_1</class>
+    <class>com.profeco.entidades.Usuario_1</class>
+    <class>com.profeco.entidades.Calificacion</class>
+    <class>com.profeco.entidades.Comercio_1</class>
+    <class>com.profeco.entidades.Sancion</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/profeco?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

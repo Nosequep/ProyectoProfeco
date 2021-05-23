@@ -1,9 +1,8 @@
-
-CREATE DATABASE  IF NOT EXISTS `profeco` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+-- MySQL dump 10.13  Distrib 8.0.25, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: profeco
 -- ------------------------------------------------------
--- Server version	5.7.23
+-- Server version	8.0.25
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,13 +24,15 @@ DROP TABLE IF EXISTS `calificacion`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `calificacion` (
   `comentario` varchar(200) NOT NULL,
-  `idUsuario` int(11) NOT NULL,
-  `idComercio` int(11) NOT NULL,
-  `calificacion` int(11) NOT NULL,
+  `idUsuario` int NOT NULL,
+  `idComercio` int NOT NULL,
+  `calificacion` int NOT NULL,
+  `idCalificacion` int NOT NULL,
+  PRIMARY KEY (`idCalificacion`),
   KEY `FK_idusuario_idx` (`idUsuario`),
   KEY `FK_idcomercio_idx` (`idComercio`),
-  CONSTRAINT `FK_idcomercio` FOREIGN KEY (`idComercio`) REFERENCES `comercio` (`idcomercio`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_idusuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK_idcomercio` FOREIGN KEY (`idComercio`) REFERENCES `comercio` (`idcomercio`),
+  CONSTRAINT `FK_idusuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idusuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -52,15 +53,15 @@ DROP TABLE IF EXISTS `comercio`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `comercio` (
-  `idcomercio` int(11) NOT NULL,
+  `idcomercio` int NOT NULL,
   `nombre` varchar(45) NOT NULL,
-  `calificacion` int(11) NOT NULL DEFAULT '5',
-  `idusuario` int(11) NOT NULL,
+  `calificacion` int NOT NULL DEFAULT '5',
+  `idusuario` int NOT NULL,
   PRIMARY KEY (`idcomercio`),
   KEY `FK_idusuario_idx` (`idusuario`),
   KEY `FK_idusuario_comercio` (`idusuario`),
-  CONSTRAINT `FK_idusuario_comercio` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `FK_idusuario_comercio` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`idusuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,19 +83,19 @@ DROP TABLE IF EXISTS `inconsistencias`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inconsistencias` (
   `precioreal` double NOT NULL,
-  `idcomercio` int(11) NOT NULL,
-  `idusuario` int(11) NOT NULL,
+  `idcomercio` int NOT NULL,
+  `idusuario` int NOT NULL,
   `preciopublicado` double NOT NULL,
-  `idproducto` int(11) NOT NULL,
+  `idproducto` int NOT NULL,
   `fecha` date NOT NULL,
-  `idreporte` int(11) NOT NULL AUTO_INCREMENT,
+  `idreporte` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`idreporte`),
   KEY `FK_idcomercio_inconsistencias_idx` (`idcomercio`),
   KEY `FK_idusuario_inconsistencias_idx` (`idusuario`),
   KEY `FK_idproducto_inconsistencias_idx` (`idproducto`),
-  CONSTRAINT `FK_idcomercio_inconsistencias` FOREIGN KEY (`idcomercio`) REFERENCES `comercio` (`idcomercio`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_idproducto_inconsistencias` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`idproducto`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_idusuario_inconsistencias` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK_idcomercio_inconsistencias` FOREIGN KEY (`idcomercio`) REFERENCES `comercio` (`idcomercio`),
+  CONSTRAINT `FK_idproducto_inconsistencias` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`idproducto`),
+  CONSTRAINT `FK_idusuario_inconsistencias` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`idusuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -115,15 +116,15 @@ DROP TABLE IF EXISTS `producto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `producto` (
-  `idproducto` int(11) NOT NULL,
+  `idproducto` int NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `precio` double NOT NULL,
   `oferta` double NOT NULL,
-  `idcomercio` int(11) NOT NULL,
+  `idcomercio` int NOT NULL,
   PRIMARY KEY (`idproducto`),
   KEY `idcomercio_idx` (`idcomercio`),
   CONSTRAINT `idcomercio` FOREIGN KEY (`idcomercio`) REFERENCES `comercio` (`idcomercio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,16 +145,16 @@ DROP TABLE IF EXISTS `sancion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sancion` (
-  `idsancion` int(11) NOT NULL,
+  `idsancion` int NOT NULL,
   `cabecera` varchar(45) NOT NULL,
   `descripcion` varchar(200) NOT NULL,
   `castigos` varchar(100) DEFAULT NULL,
   `multa` double NOT NULL,
-  `idcomercio` int(11) DEFAULT NULL,
+  `idcomercio` int DEFAULT NULL,
   PRIMARY KEY (`idsancion`),
   KEY `idcomercio_idx` (`idcomercio`),
   CONSTRAINT `comercio` FOREIGN KEY (`idcomercio`) REFERENCES `comercio` (`idcomercio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,12 +174,12 @@ DROP TABLE IF EXISTS `usuario`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario` (
-  `idusuario` int(11) NOT NULL,
+  `idusuario` int NOT NULL,
   `username` varchar(45) NOT NULL,
   `contrasenia` varchar(45) NOT NULL,
   `rol` varchar(45) NOT NULL,
   PRIMARY KEY (`idusuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -200,4 +201,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-22 14:18:02
+-- Dump completed on 2021-05-22 22:05:12
