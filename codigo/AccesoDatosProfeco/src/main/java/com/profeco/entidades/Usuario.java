@@ -48,6 +48,10 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @Column(name = "rol")
     private String rol;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
+    private Collection<Calificacion> calificacionCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idusuario")
+    private Collection<Inconsistencias> inconsistenciasCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idusuario")
     private Collection<Comercio> comercioCollection;
 
@@ -95,6 +99,24 @@ public class Usuario implements Serializable {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    @XmlTransient
+    public Collection<Calificacion> getCalificacionCollection() {
+        return calificacionCollection;
+    }
+
+    public void setCalificacionCollection(Collection<Calificacion> calificacionCollection) {
+        this.calificacionCollection = calificacionCollection;
+    }
+
+    @XmlTransient
+    public Collection<Inconsistencias> getInconsistenciasCollection() {
+        return inconsistenciasCollection;
+    }
+
+    public void setInconsistenciasCollection(Collection<Inconsistencias> inconsistenciasCollection) {
+        this.inconsistenciasCollection = inconsistenciasCollection;
     }
 
     @XmlTransient

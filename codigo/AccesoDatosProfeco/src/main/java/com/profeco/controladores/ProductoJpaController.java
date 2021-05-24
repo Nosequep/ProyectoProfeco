@@ -5,6 +5,7 @@
  */
 package com.profeco.controladores;
 
+import com.profeco.controladores.exceptions.IllegalOrphanException;
 import com.profeco.controladores.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -12,7 +13,10 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.profeco.entidades.Comercio;
+import com.profeco.entidades.Inconsistencias;
 import com.profeco.entidades.Producto;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -34,6 +38,9 @@ public class ProductoJpaController implements Serializable {
     }
 
     public void create(Producto producto) {
+        if (producto.getInconsistenciasCollection() == null) {
+            producto.setInconsistenciasCollection(new ArrayList<Inconsistencias>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -43,10 +50,25 @@ public class ProductoJpaController implements Serializable {
                 idcomercio = em.getReference(idcomercio.getClass(), idcomercio.getIdcomercio());
                 producto.setIdcomercio(idcomercio);
             }
+            Collection<Inconsistencias> attachedInconsistenciasCollection = new ArrayList<Inconsistencias>();
+            for (Inconsistencias inconsistenciasCollectionInconsistenciasToAttach : producto.getInconsistenciasCollection()) {
+                inconsistenciasCollectionInconsistenciasToAttach = em.getReference(inconsistenciasCollectionInconsistenciasToAttach.getClass(), inconsistenciasCollectionInconsistenciasToAttach.getIdreporte());
+                attachedInconsistenciasCollection.add(inconsistenciasCollectionInconsistenciasToAttach);
+            }
+            producto.setInconsistenciasCollection(attachedInconsistenciasCollection);
             em.persist(producto);
             if (idcomercio != null) {
                 idcomercio.getProductoCollection().add(producto);
                 idcomercio = em.merge(idcomercio);
+            }
+            for (Inconsistencias inconsistenciasCollectionInconsistencias : producto.getInconsistenciasCollection()) {
+                Producto oldIdproductoOfInconsistenciasCollectionInconsistencias = inconsistenciasCollectionInconsistencias.getIdproducto();
+                inconsistenciasCollectionInconsistencias.setIdproducto(producto);
+                inconsistenciasCollectionInconsistencias = em.merge(inconsistenciasCollectionInconsistencias);
+                if (oldIdproductoOfInconsistenciasCollectionInconsistencias != null) {
+                    oldIdproductoOfInconsistenciasCollectionInconsistencias.getInconsistenciasCollection().remove(inconsistenciasCollectionInconsistencias);
+                    oldIdproductoOfInconsistenciasCollectionInconsistencias = em.merge(oldIdproductoOfInconsistenciasCollectionInconsistencias);
+                }
             }
             em.getTransaction().commit();
         } finally {
@@ -56,7 +78,7 @@ public class ProductoJpaController implements Serializable {
         }
     }
 
-    public void edit(Producto producto) throws NonexistentEntityException, Exception {
+    public void edit(Producto producto) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -64,10 +86,31 @@ public class ProductoJpaController implements Serializable {
             Producto persistentProducto = em.find(Producto.class, producto.getIdproducto());
             Comercio idcomercioOld = persistentProducto.getIdcomercio();
             Comercio idcomercioNew = producto.getIdcomercio();
+            Collection<Inconsistencias> inconsistenciasCollectionOld = persistentProducto.getInconsistenciasCollection();
+            Collection<Inconsistencias> inconsistenciasCollectionNew = producto.getInconsistenciasCollection();
+            List<String> illegalOrphanMessages = null;
+            for (Inconsistencias inconsistenciasCollectionOldInconsistencias : inconsistenciasCollectionOld) {
+                if (!inconsistenciasCollectionNew.contains(inconsistenciasCollectionOldInconsistencias)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Inconsistencias " + inconsistenciasCollectionOldInconsistencias + " since its idproducto field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             if (idcomercioNew != null) {
                 idcomercioNew = em.getReference(idcomercioNew.getClass(), idcomercioNew.getIdcomercio());
                 producto.setIdcomercio(idcomercioNew);
             }
+            Collection<Inconsistencias> attachedInconsistenciasCollectionNew = new ArrayList<Inconsistencias>();
+            for (Inconsistencias inconsistenciasCollectionNewInconsistenciasToAttach : inconsistenciasCollectionNew) {
+                inconsistenciasCollectionNewInconsistenciasToAttach = em.getReference(inconsistenciasCollectionNewInconsistenciasToAttach.getClass(), inconsistenciasCollectionNewInconsistenciasToAttach.getIdreporte());
+                attachedInconsistenciasCollectionNew.add(inconsistenciasCollectionNewInconsistenciasToAttach);
+            }
+            inconsistenciasCollectionNew = attachedInconsistenciasCollectionNew;
+            producto.setInconsistenciasCollection(inconsistenciasCollectionNew);
             producto = em.merge(producto);
             if (idcomercioOld != null && !idcomercioOld.equals(idcomercioNew)) {
                 idcomercioOld.getProductoCollection().remove(producto);
@@ -76,6 +119,17 @@ public class ProductoJpaController implements Serializable {
             if (idcomercioNew != null && !idcomercioNew.equals(idcomercioOld)) {
                 idcomercioNew.getProductoCollection().add(producto);
                 idcomercioNew = em.merge(idcomercioNew);
+            }
+            for (Inconsistencias inconsistenciasCollectionNewInconsistencias : inconsistenciasCollectionNew) {
+                if (!inconsistenciasCollectionOld.contains(inconsistenciasCollectionNewInconsistencias)) {
+                    Producto oldIdproductoOfInconsistenciasCollectionNewInconsistencias = inconsistenciasCollectionNewInconsistencias.getIdproducto();
+                    inconsistenciasCollectionNewInconsistencias.setIdproducto(producto);
+                    inconsistenciasCollectionNewInconsistencias = em.merge(inconsistenciasCollectionNewInconsistencias);
+                    if (oldIdproductoOfInconsistenciasCollectionNewInconsistencias != null && !oldIdproductoOfInconsistenciasCollectionNewInconsistencias.equals(producto)) {
+                        oldIdproductoOfInconsistenciasCollectionNewInconsistencias.getInconsistenciasCollection().remove(inconsistenciasCollectionNewInconsistencias);
+                        oldIdproductoOfInconsistenciasCollectionNewInconsistencias = em.merge(oldIdproductoOfInconsistenciasCollectionNewInconsistencias);
+                    }
+                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -94,7 +148,7 @@ public class ProductoJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -105,6 +159,17 @@ public class ProductoJpaController implements Serializable {
                 producto.getIdproducto();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The producto with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            Collection<Inconsistencias> inconsistenciasCollectionOrphanCheck = producto.getInconsistenciasCollection();
+            for (Inconsistencias inconsistenciasCollectionOrphanCheckInconsistencias : inconsistenciasCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Producto (" + producto + ") cannot be destroyed since the Inconsistencias " + inconsistenciasCollectionOrphanCheckInconsistencias + " in its inconsistenciasCollection field has a non-nullable idproducto field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Comercio idcomercio = producto.getIdcomercio();
             if (idcomercio != null) {

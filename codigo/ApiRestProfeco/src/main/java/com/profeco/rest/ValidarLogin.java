@@ -5,8 +5,9 @@
  */
 package com.profeco.rest;
 
-import com.profeco.entidades.Usuario;
 import com.profeco.controladores.UsuarioJpaController;
+import com.profeco.entidades.Usuario;
+
 
 /**
  *
@@ -20,7 +21,9 @@ public class ValidarLogin {
         List<Usuario> usuarios = jpa.findUsuarioEntities();
         for(Usuario u : usuarios){
             if(u.getUsername().equals(usuario.getUsername()) && u.getContrasenia().equals(usuario.getContrasenia())){
+                System.out.println("validacion exitosa");
                 return true;
+                
             }
         }
         return false;

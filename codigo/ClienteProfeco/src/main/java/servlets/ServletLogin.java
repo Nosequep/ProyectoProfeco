@@ -45,7 +45,9 @@ public class ServletLogin extends HttpServlet{
             String usuario = req.getParameter("user");
             String contra = req.getParameter("password");
     
-
+            System.out.println(usuario);
+            System.out.println(contra);
+            
             Usuario usuarioObj = new Usuario(0, usuario, contra, "asdf");
             URL url = new URL("http://localhost:9999/profeco/login");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();

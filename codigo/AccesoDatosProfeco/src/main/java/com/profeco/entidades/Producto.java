@@ -6,7 +6,9 @@
 package com.profeco.entidades;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,8 +18,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -49,6 +53,8 @@ public class Producto implements Serializable {
     @Basic(optional = false)
     @Column(name = "oferta")
     private double oferta;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idproducto")
+    private Collection<Inconsistencias> inconsistenciasCollection;
     @JoinColumn(name = "idcomercio", referencedColumnName = "idcomercio")
     @ManyToOne(optional = false)
     private Comercio idcomercio;
@@ -97,6 +103,15 @@ public class Producto implements Serializable {
 
     public void setOferta(double oferta) {
         this.oferta = oferta;
+    }
+
+    @XmlTransient
+    public Collection<Inconsistencias> getInconsistenciasCollection() {
+        return inconsistenciasCollection;
+    }
+
+    public void setInconsistenciasCollection(Collection<Inconsistencias> inconsistenciasCollection) {
+        this.inconsistenciasCollection = inconsistenciasCollection;
     }
 
     public Comercio getIdcomercio() {

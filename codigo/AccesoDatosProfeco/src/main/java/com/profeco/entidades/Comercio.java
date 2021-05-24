@@ -49,9 +49,15 @@ public class Comercio implements Serializable {
     @Basic(optional = false)
     @Column(name = "calificacion")
     private int calificacion;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idComercio")
+    private Collection<Calificacion> calificacionCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idcomercio")
+    private Collection<Inconsistencias> inconsistenciasCollection;
     @JoinColumn(name = "idusuario", referencedColumnName = "idusuario")
     @ManyToOne(optional = false)
     private Usuario idusuario;
+    @OneToMany(mappedBy = "idcomercio")
+    private Collection<Sancion> sancionCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idcomercio")
     private Collection<Producto> productoCollection;
 
@@ -92,12 +98,39 @@ public class Comercio implements Serializable {
         this.calificacion = calificacion;
     }
 
+    @XmlTransient
+    public Collection<Calificacion> getCalificacionCollection() {
+        return calificacionCollection;
+    }
+
+    public void setCalificacionCollection(Collection<Calificacion> calificacionCollection) {
+        this.calificacionCollection = calificacionCollection;
+    }
+
+    @XmlTransient
+    public Collection<Inconsistencias> getInconsistenciasCollection() {
+        return inconsistenciasCollection;
+    }
+
+    public void setInconsistenciasCollection(Collection<Inconsistencias> inconsistenciasCollection) {
+        this.inconsistenciasCollection = inconsistenciasCollection;
+    }
+
     public Usuario getIdusuario() {
         return idusuario;
     }
 
     public void setIdusuario(Usuario idusuario) {
         this.idusuario = idusuario;
+    }
+
+    @XmlTransient
+    public Collection<Sancion> getSancionCollection() {
+        return sancionCollection;
+    }
+
+    public void setSancionCollection(Collection<Sancion> sancionCollection) {
+        this.sancionCollection = sancionCollection;
     }
 
     @XmlTransient
