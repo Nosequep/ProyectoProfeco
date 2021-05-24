@@ -8,6 +8,7 @@ package servlets;
 import com.google.gson.Gson;
 import com.profeco.entidades.Comercio;
 import com.profeco.entidades.Producto;
+import com.profeco.controladores.ProductoJpaController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +16,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -32,6 +34,7 @@ public class ServletMercado extends HttpServlet{
     /*
         Metodo para solicitudes POST
     */
+    ComercioJpaController consultas = new ComercioJpaController();
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException{
         BufferedReader reader;
@@ -70,7 +73,30 @@ public class ServletMercado extends HttpServlet{
                 Gson gson = new Gson();
                 jsonInputString = gson.toJson(producto);
             }
-            
+            if(solicitud.equals("eliminarProducto")){
+                Producto temp = new Producto();
+                temp.setNombre(nombre);
+                temp.setIdComercio(new Comercio(Integer.parseInt(comercio)));
+                ArrayList<Producto> productos = consultas.findProductoEntities();
+                
+                for (Producto producto : productos) {
+                    if(producto.getNombre().equalsIgnoreCase(temp.getNombre()) && producto.getIdComercio() == temp.getIdComercio()){
+                        consultas.destroy(producto.getIdProducto());
+                        productos.remove(producto);
+                        return;
+                    }
+                }
+                url = new URL("http://localhost:9999/profeco/eliminarProducto");
+                con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", "token");
+                con.setDoOutput(true);
+                con.setDoInput(true);
+                Gson gson = new Gson();
+                jsonInputString = gson.toJson(temp);
+            }
             //Pasar los datos al url
             System.out.println("Json " + jsonInputString);
             try (OutputStream os = con.getOutputStream()) {
