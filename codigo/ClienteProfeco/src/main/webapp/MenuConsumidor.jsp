@@ -27,7 +27,7 @@
                 </li>
                 <li><a href="BuscarProducto.jsp">Buscar productos</a></li>
                 <li><a href="">Wishlist</a></li>
-                 <li><a href="">Calificar</a></li>
+                 <li><a href="CalificarProducto.jsp">Calificar</a></li>
                 <li><a href="r">Reportar inconsistencia</a></li>
                
                 

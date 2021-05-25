@@ -13,7 +13,7 @@
     </head>
     <body>
         <h2>Buscar producto</h2>
-        <form action="consumidor" method="POST">
+        <form action="consumidor" method="GET">
             <label for="nombre">Nombre:</label>
             <input type="text" name="nombre"><br><br>
             <input id="solicitud" name ="solicitud" type="hidden" value="buscarProducto">

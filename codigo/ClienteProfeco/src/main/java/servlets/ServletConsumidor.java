@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import com.profeco.controladores.ComercioJpaController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,22 +17,63 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.profeco.controladores.ProductoJpaController;
+import com.profeco.controladores.exceptions.NonexistentEntityException;
+import com.profeco.entidades.Comercio;
 import com.profeco.entidades.Producto;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Lenovo
  */
 public class ServletConsumidor extends HttpServlet {
     ProductoJpaController consultas = new ProductoJpaController();
+    ComercioJpaController consultarComercios = new ComercioJpaController();
     /*
         Metodo para solicitudes POST
      */
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException {
+           String solicitud = req.getParameter("solicitud");
+           String nombre = req.getParameter("nombre");
+                   String id = req.getParameter("idProducto");
+                   String precio = req.getParameter("precio");
+                   String oferta = req.getParameter("oferta");
+                   String idcomercio = req.getParameter("comercio");
+                   
+                   Producto temp1 = new Producto();
+                   temp1.setNombre(nombre);
+                   temp1.setIdproducto(Integer.parseInt(id));
+                   temp1.setPrecio(Double.parseDouble(precio));
+                   temp1.setOferta(Double.parseDouble(oferta));
+                   temp1.setIdcomercio(new Comercio(Integer.parseInt(idcomercio)));
+           if(solicitud.equalsIgnoreCase("calificarProducto")){
+               try {
+                   req.setAttribute("Producto", temp1);
+                   req.getRequestDispatcher("CalificarProducto.jsp").forward(req, res);
+               } catch (IOException ex) {
+                   Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, ex);
+               }
            
+           }
+           if(solicitud.equalsIgnoreCase("productoCalificado")){
+               String calificacion = req.getParameter("calificacion");
+               
+               Comercio comercio = consultarComercios.findComercio(temp1.getIdcomercio().getIdcomercio());
+               comercio.setCalificacion(Integer.parseInt(calificacion));
+               try {
+                   consultarComercios.edit(comercio);
+               } catch (NonexistentEntityException ex) {
+                   Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, ex);
+               } catch (Exception ex) {
+                   Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, ex);
+               }
+               
+               req.getRequestDispatcher("MenuConsumidor.jsp");
+           }
     }
 
     @Override
@@ -54,6 +96,7 @@ public class ServletConsumidor extends HttpServlet {
             }
             req.getRequestDispatcher("MostrarProducto.jsp").forward(req, res);
         }else{
+            req.getRequestDispatcher("paginaError.jsp").forward(req, res);
             PrintWriter out=res.getWriter();
             out.println("Error, no se encontro el Producto.");
         }

@@ -19,25 +19,29 @@
 <table>
 <tr>
 <td>Nombre:</td>
-<td><input type="text" size="20" name="nombre" value="<%= producto.getNombre() %>"></td>
+<td><input id="nombre" type="text" size="20" name="nombre" value="<%= producto.getNombre() %>"></td>
 </tr>
 <tr>
 <td>ID:</td>
-<td><input type="text" size="20" name="id" value="<%= producto.getIdproducto() %>"></td>
+<td><input id="idProducto" type="text" size="20" name="id" value="<%= producto.getIdproducto() %>"></td>
 </tr>
 <tr>
 <td>Precio:</td>
-<td><input type="text" size="20" name="precio" value="<%= producto.getPrecio() %>"></td>
+<td><input id="precio" type="text" size="20" name="precio" value="<%= producto.getPrecio() %>"></td>
 </tr>
 <tr>
 <td>Oferta:</td>
-<td><input type="text" size="20" name="oferta" value="<%= producto.getOferta() %>"></td>
+<td><input id="oferta" type="text" size="20" name="oferta" value="<%= producto.getOferta() %>"></td>
 </tr>
 <tr>
 <td>Comercio:</td>
-<td><input type="text" size="20" name="comercio" value="<%= producto.getIdcomercio() %>"></td>
+<td><input id="comercio" type="text" size="20" name="comercio" value="<%= producto.getIdcomercio() %>"></td>
 </tr>
 </table>
 </div>
+<form action="consumidor" method="POST">
+            <input id="solicitud" name ="solicitud" type="hidden" value="calificarProducto">
+            <input type="submit" value="submit">
+        </form>
 </body>
 </html>
