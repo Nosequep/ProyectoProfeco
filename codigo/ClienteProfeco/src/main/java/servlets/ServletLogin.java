@@ -99,7 +99,7 @@ public class ServletLogin extends HttpServlet{
                 out.println("</html>");
             }else{
                 req.setAttribute("prueba", "Mensajito");
-                System.out.println("Si entro");
+                System.out.println("Usuario " + usuario);
                 
                 if (usuario.equals("mercado")) {
                     dispatcher = req.getRequestDispatcher("MenuMercado.jsp");

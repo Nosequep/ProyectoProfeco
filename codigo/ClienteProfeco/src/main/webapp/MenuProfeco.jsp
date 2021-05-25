@@ -23,7 +23,7 @@
         
         <nav>
             <ul>
-                <li><a href="clientes.html">Castigos y multas</a></li>
+                <li><a href="AgregarSancion.jsp">Castigos y multas</a></li>
             </ul>
             
         </nav>

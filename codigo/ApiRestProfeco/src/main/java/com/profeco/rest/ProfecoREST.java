@@ -3,10 +3,21 @@ package com.profeco.rest;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.profeco.controladores.ProductoJpaController;
+import com.profeco.controladores.SancionJpaController;
 import com.profeco.entidades.Producto;
+import com.profeco.entidades.Sancion;
 import com.profeco.entidades.Usuario;
+import java.lang.reflect.Type;
+
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +60,38 @@ public class ProfecoREST {
         ProductoJpaController jpaController = new ProductoJpaController();
         Gson gson =  new Gson();
         Producto p = gson.fromJson(producto, Producto.class);
+        try {
+            jpaController.create(p);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    
+    
+    @GetMapping("desplegarSanciones")
+    public ResponseEntity<String> desplegarSanciones(){
+        try {
+            System.out.println("Nuevo metodo desplegar sanciones");
+            SancionJpaController jpaController = new SancionJpaController();
+            List<Sancion> sanciones =jpaController.findSancionEntities();
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(sanciones);
+            return ResponseEntity.ok(jsonString);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(ProfecoREST.class.getName()).log(Level.SEVERE, null, ex);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    
+    
+    
+    @PostMapping("subirSancion")
+    public ResponseEntity subirSancion(@RequestBody String sancion){
+        System.out.println("Agregando sancion " + sancion);
+        SancionJpaController jpaController = new SancionJpaController();
+        Gson gson =  new Gson();
+        Sancion p = gson.fromJson(sancion, Sancion.class);
         try {
             jpaController.create(p);
             return ResponseEntity.status(HttpStatus.OK).build();

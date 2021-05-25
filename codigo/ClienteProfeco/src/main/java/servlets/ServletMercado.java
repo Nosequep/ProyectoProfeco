@@ -6,17 +6,20 @@
 package servlets;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.profeco.controladores.ComercioJpaController;
 import com.profeco.entidades.Comercio;
 import com.profeco.entidades.Producto;
-import com.profeco.controladores.ProductoJpaController;
+import com.profeco.entidades.Sancion;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -74,16 +77,17 @@ public class ServletMercado extends HttpServlet{
                 jsonInputString = gson.toJson(producto);
             }
             if(solicitud.equals("eliminarProducto")){
+                /*
                 Producto temp = new Producto();
                 temp.setNombre(nombre);
-                temp.setIdComercio(new Comercio(Integer.parseInt(comercio)));
+                temp.setIdcomercio(new Comercio(Integer.parseInt(comercio)));
                 ArrayList<Producto> productos = consultas.findProductoEntities();
                 
                 for (Producto producto : productos) {
-                    if(producto.getNombre().equalsIgnoreCase(temp.getNombre()) && producto.getIdComercio() == temp.getIdComercio()){
-                        consultas.destroy(producto.getIdProducto());
+                    if(producto.getNombre().equalsIgnoreCase(temp.getNombre()) && producto.getIdcomercio() == temp.getIdcomercio()){
+                        consultas.destroy(producto.getIdproducto());
                         productos.remove(producto);
-                        return;
+                        break;
                     }
                 }
                 url = new URL("http://localhost:9999/profeco/eliminarProducto");
@@ -96,6 +100,7 @@ public class ServletMercado extends HttpServlet{
                 con.setDoInput(true);
                 Gson gson = new Gson();
                 jsonInputString = gson.toJson(temp);
+                */
             }
             //Pasar los datos al url
             System.out.println("Json " + jsonInputString);
@@ -122,7 +127,9 @@ public class ServletMercado extends HttpServlet{
                 }
                 reader.close();
                  System.out.println(responseContent.toString());
-
+                 System.out.println("Menu dispatcher");
+                dispatcher = req.getRequestDispatcher("MenuMercado.jsp");
+                dispatcher.forward(req, res);
             }
         } catch (IOException ex) {
             Logger.getLogger(ServletLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,7 +138,60 @@ public class ServletMercado extends HttpServlet{
     
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException{
-        
+                BufferedReader reader;
+        String line;
+        StringBuffer responseContent = new StringBuffer();
+        RequestDispatcher dispatcher;
+        try {
+          
+            PrintWriter out = res.getWriter();
+
+            String solicitud = req.getParameter("solicitud");
+            System.out.println("Solicitud " + solicitud);
+            URL url = null;
+            HttpURLConnection con = null;
+            String jsonInputString = null;
+            if(solicitud.equals("desplegarSanciones")){
+
+                url = new URL("http://localhost:9999/profeco/desplegarSanciones");
+                con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("Content-Type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", "token");
+                con.setDoOutput(true);
+                con.setDoInput(true);
+
+            }
+          
+            int status = con.getResponseCode();
+            System.out.println("codigo " + status);
+            //Respuesta de la solicitud
+            if(status > 299){
+                //Cuando un error
+                //reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                dispatcher = req.getRequestDispatcher("paginaError.jsp");
+                dispatcher.forward(req, res);
+            }else{
+                //Cuando la solicitud es exitosa
+                //Leer lo obtenido de la respuesta
+                reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                while((line = reader.readLine()) != null){
+                    responseContent.append(line);
+                }
+                reader.close();
+                 System.out.println(responseContent.toString());
+                String respuesta = responseContent.toString();
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<Sancion>>() {}.getType();
+                List<Sancion> sanciones = gson.fromJson(respuesta, listType);
+                req.setAttribute("sanciones", sanciones);
+                dispatcher = req.getRequestDispatcher("DesplegarSanciones.jsp");
+                dispatcher.forward(req, res);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ServletLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

@@ -5,6 +5,7 @@
  */
 package com.profeco.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -49,6 +50,7 @@ public class Sancion implements Serializable {
     @Basic(optional = false)
     @Column(name = "multa")
     private double multa;
+    @JsonIgnore
     @JoinColumn(name = "idcomercio", referencedColumnName = "idcomercio")
     @ManyToOne
     private Comercio idcomercio;

@@ -26,9 +26,7 @@
                 
                 <li><a href="AgregarProducto.jsp">Subir producto</a></li>
                 <li><a href="EliminarProducto.jsp">Quitar producto</a></li>
-                <li><a href="rentas.html">Editar producto</a></li>
-                <li><a href="inventario.html">Ver producto</a></li>
-                <li><a href="inventario.html">Reportes</a></li>
+                <li><a href="mercado?solicitud=desplegarSanciones">Mostrar sanciones</a></li>
                 
             </ul>
             
