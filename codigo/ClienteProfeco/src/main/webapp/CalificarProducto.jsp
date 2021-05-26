@@ -26,7 +26,7 @@
                     </tr>
                     <tr>
                         <td>Comercio:</td>
-                        <td><input id="comercio" type="text" size="20" name="comercio" value="<%= producto.getIdcomercio()%>"></td>
+<td><input id="comercio" type="text" size="20" name="comercio" value="<%= producto.getIdcomercio().getIdcomercio() %>"></td>
                     </tr>
                 </table>
             </div>

@@ -103,10 +103,11 @@ public class ServletConsumidor extends HttpServlet {
         String solicitud = req.getParameter("solicitud");
         System.out.println("Solicitud " + solicitud);
         Producto temp1;
+        String nombre = req.getParameter("nombre");
         List<Producto> productos = new ArrayList<>();
         List<Producto> temp = consultas.findProductoEntities();
         for (Producto producto : temp) {
-            if(producto.getNombre().equalsIgnoreCase(solicitud)){
+            if(producto.getNombre().equalsIgnoreCase(nombre)){
                 temp1 = producto;
                 productos.add(temp1);
             }
@@ -114,7 +115,7 @@ public class ServletConsumidor extends HttpServlet {
         
         if(!productos.isEmpty()){
             for (Producto producto : productos) {
-                req.setAttribute("Producto", producto.getNombre());
+                req.setAttribute("Producto", producto);
             }
             req.getRequestDispatcher("MostrarProducto.jsp").forward(req, res);
         }else{

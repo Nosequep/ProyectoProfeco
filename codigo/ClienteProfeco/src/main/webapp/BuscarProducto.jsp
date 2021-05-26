@@ -15,7 +15,7 @@
         <h2>Buscar producto</h2>
         <form action="consumidor" method="GET">
             <label for="nombre">Nombre:</label>
-            <input type="text" name="nombre"><br><br>
+            <input type="text" name="nombre" id="nombre"><br><br>
             <input id="solicitud" name ="solicitud" type="hidden" value="buscarProducto">
             <input type="submit" value="submit">
         </form>

@@ -24,7 +24,7 @@
                     </tr>
                     <tr>
                         <td>ID:</td>
-                        <td><input id="idProducto" type="text" size="20" name="id" value="<%= producto.getIdproducto()%>"></td>
+                        <td><input id="idProducto" type="text" size="20" name="idProducto" value="<%= producto.getIdproducto()%>"></td>
                     </tr>
                     <tr>
                         <td>Precio:</td>
@@ -36,7 +36,7 @@
                     </tr>
                     <tr>
                         <td>Comercio:</td>
-                        <td><input id="comercio" type="text" size="20" name="comercio" value="<%= producto.getIdcomercio()%>"></td>
+                        <td><input id="comercio" type="text" size="20" name="comercio" value="<%= producto.getIdcomercio().getIdcomercio()%>"></td>
                     </tr>
                 </table>
             </div>
