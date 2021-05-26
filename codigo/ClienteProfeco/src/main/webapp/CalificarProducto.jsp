@@ -26,7 +26,7 @@
                     </tr>
                     <tr>
                         <td>Comercio:</td>
-<td><input id="comercio" type="text" size="20" name="comercio" value="<%= producto.getIdcomercio().getIdcomercio() %>"></td>
+                        <td><input id="comercio" type="text" size="20" name="comercio" value="<%= producto.getIdcomercio().getIdcomercio()%>"></td>
                     </tr>
                 </table>
             </div>
@@ -40,7 +40,7 @@
                 <option value="5"> 5 </option>
             </select>
             <label for="mensaje"> Mensaje:</label>
-            <input id="mensaje" type="text">
+            <input id="mensaje" type="text" name="mensaje">
             <input id="solicitud" name ="solicitud" type="hidden" value="productoCalificado">
             <input type="submit" value="submit">
         </form>

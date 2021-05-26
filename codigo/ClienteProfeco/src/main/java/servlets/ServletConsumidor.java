@@ -28,78 +28,97 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+
 /**
  *
  * @author Lenovo
  */
 public class ServletConsumidor extends HttpServlet {
+
     ProductoJpaController consultas = new ProductoJpaController();
     ComercioJpaController consultarComercios = new ComercioJpaController();
     CalificacionJpaController consultaCalificaciones = new CalificacionJpaController();
+    
+
     /*
         Metodo para solicitudes POST
      */
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException {
-           String solicitud = req.getParameter("solicitud");
-           String nombre = req.getParameter("nombre");
-                   String id = req.getParameter("idProducto");
-                   String precio = req.getParameter("precio");
-                   String oferta = req.getParameter("oferta");
-                   String idcomercio = req.getParameter("comercio");
-                   
-                   
-           if(solicitud.equalsIgnoreCase("calificarProducto")){
-               Producto temp1 = new Producto();
-                   temp1.setNombre(nombre);
-                   temp1.setIdproducto(Integer.parseInt(id));
-                   temp1.setPrecio(Double.parseDouble(precio));
-                   temp1.setOferta(Double.parseDouble(oferta));
-                   temp1.setIdcomercio(new Comercio(Integer.parseInt(idcomercio)));
-               try {
-                   req.setAttribute("Producto", temp1);
-                   req.getRequestDispatcher("CalificarProducto.jsp").forward(req, res);
-               } catch (IOException ex) {
-                   Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, ex);
-               }
-           
-           }
-           if(solicitud.equalsIgnoreCase("productoCalificado")){
-               
-               Producto temp1 = new Producto();
-                   temp1.setNombre(nombre);
-                   temp1.setPrecio(Double.parseDouble(precio));
-                   temp1.setIdcomercio(new Comercio(Integer.parseInt(idcomercio)));
-               
-               String calificacion = req.getParameter("calificacion");
-               String mensaje = req.getParameter("mensaje");
-               try{
-               Calificacion cali = new Calificacion();
-               cali.setCalificacion(Integer.parseInt(calificacion));
-               cali.setComentario(mensaje);
-               cali.setIdUsuario(new Usuario(3));
-               cali.setIdComercio(new Comercio (Integer.parseInt(idcomercio)));
-               consultaCalificaciones.create(cali);
-                   System.out.println(consultaCalificaciones.findCalificacion(Integer.SIZE));
-               }catch(Exception e){
-                   Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, e);
-               }
-               Comercio comercio = consultarComercios.findComercio(temp1.getIdcomercio().getIdcomercio());
-               comercio.setCalificacion(Integer.parseInt(calificacion));
-               try {
-                   consultarComercios.edit(comercio);
-               } catch (NonexistentEntityException ex) {
-                   Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, ex);
-               } catch (Exception ex) {
-                   Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, ex);
-               }
-               
-               req.getRequestDispatcher("MenuConsumidor.jsp");
-           }
+        
+        RequestDispatcher dispatcher;
+        
+        String solicitud = req.getParameter("solicitud");
+        String nombre = req.getParameter("nombre");
+        String id = req.getParameter("idProducto");
+        String precio = req.getParameter("precio");
+        String oferta = req.getParameter("oferta");
+        String idcomercio = req.getParameter("comercio");
+
+        if (solicitud.equalsIgnoreCase("calificarProducto")) {
+            Producto temp1 = new Producto();
+            temp1.setNombre(nombre);
+            temp1.setIdproducto(Integer.parseInt(id));
+            temp1.setPrecio(Double.parseDouble(precio));
+            temp1.setOferta(Double.parseDouble(oferta));
+            temp1.setIdcomercio(new Comercio(Integer.parseInt(idcomercio)));
+            try {
+                req.setAttribute("Producto", temp1);
+                req.getRequestDispatcher("CalificarProducto.jsp").forward(req, res);
+            } catch (IOException ex) {
+                Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+        if (solicitud.equalsIgnoreCase("productoCalificado")) {
+
+            Producto temp1 = new Producto();
+            temp1.setNombre(nombre);
+            temp1.setPrecio(Double.parseDouble(precio));
+            temp1.setIdcomercio(new Comercio(Integer.parseInt(idcomercio)));
+            
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            
+            System.out.println(temp1.getIdcomercio().getIdcomercio() + " / " +temp1.getNombre() + " / " + temp1.getPrecio() + " / " + temp1.getIdproducto());
+
+            String calificacion = req.getParameter("calificacion");
+            String mensaje = req.getParameter("mensaje");
+            try {
+                Calificacion cali = new Calificacion();
+                cali.setCalificacion(Integer.parseInt(calificacion));
+                cali.setComentario(mensaje);
+                cali.setIdUsuario(new Usuario(3));
+                cali.setIdComercio(new Comercio(Integer.parseInt(idcomercio)));
+                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+                System.out.println(cali.getCalificacion() + "/" + cali.getComentario() + "/" + cali.getIdUsuario().getIdusuario()+ "/" + cali.getIdComercio().getIdcomercio());
+                consultaCalificaciones.create(cali);
+//                System.out.println(consultaCalificaciones.findCalificacion(Integer.SIZE));
+            } catch (Exception e) {
+                Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, e);
+            }
+            Comercio comercio = consultarComercios.findComercio(temp1.getIdcomercio().getIdcomercio());
+            comercio.setCalificacion(Integer.parseInt(calificacion));
+            try {
+                consultarComercios.edit(comercio);
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            
+        }
+        dispatcher = req.getRequestDispatcher("MenuConsumidor.jsp");
+        try {
+            dispatcher.forward(req, res);
+        } catch (IOException ex) {
+            Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         String solicitud = req.getParameter("solicitud");
         System.out.println("Solicitud " + solicitud);
         Producto temp1;
@@ -107,20 +126,20 @@ public class ServletConsumidor extends HttpServlet {
         List<Producto> productos = new ArrayList<>();
         List<Producto> temp = consultas.findProductoEntities();
         for (Producto producto : temp) {
-            if(producto.getNombre().equalsIgnoreCase(nombre)){
+            if (producto.getNombre().equalsIgnoreCase(nombre)) {
                 temp1 = producto;
                 productos.add(temp1);
             }
         }
-        
-        if(!productos.isEmpty()){
+
+        if (!productos.isEmpty()) {
             for (Producto producto : productos) {
                 req.setAttribute("Producto", producto);
             }
             req.getRequestDispatcher("MostrarProducto.jsp").forward(req, res);
-        }else{
+        } else {
             req.getRequestDispatcher("paginaError.jsp").forward(req, res);
-            PrintWriter out=res.getWriter();
+            PrintWriter out = res.getWriter();
             out.println("Error, no se encontro el Producto.");
         }
     }
