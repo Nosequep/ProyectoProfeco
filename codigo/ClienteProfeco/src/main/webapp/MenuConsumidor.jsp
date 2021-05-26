@@ -22,9 +22,7 @@
         
         <nav>
             <ul>
-                <li><a href="consumidor">Ofertas</a>
-                    <text id="oferta" hidden="true" title="oferta"/>
-                </li>
+                <li><a href="consumidor?solicitud=desplegarOfertas">Ofertas</a></li>
                 <li><a href="">Buscar productos</a></li>
                 <li><a href="">Wishlist</a></li>
                  <li><a href="">Calificar</a></li>

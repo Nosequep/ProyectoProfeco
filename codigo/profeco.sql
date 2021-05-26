@@ -3,7 +3,7 @@
 -- Host: localhost    Database: profeco
 -- ------------------------------------------------------
 -- Server version	8.0.24
-
+USE profeco;
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -61,7 +61,7 @@ CREATE TABLE `comercio` (
   KEY `FK_idusuario_idx` (`idusuario`),
   KEY `FK_idusuario_comercio` (`idusuario`),
   CONSTRAINT `FK_idusuario_comercio` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`idusuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +124,7 @@ CREATE TABLE `producto` (
   PRIMARY KEY (`idproducto`),
   KEY `FK_idcomercio_producto_idx` (`idcomercio`),
   CONSTRAINT `FK_idcomercio_producto` FOREIGN KEY (`idcomercio`) REFERENCES `comercio` (`idcomercio`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +154,7 @@ CREATE TABLE `sancion` (
   PRIMARY KEY (`idsancion`),
   KEY `FK_idcomercio_sancion_idx` (`idcomercio`),
   CONSTRAINT `FK_idcomercio_sancion` FOREIGN KEY (`idcomercio`) REFERENCES `comercio` (`idcomercio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,7 +179,7 @@ CREATE TABLE `usuario` (
   `contrasenia` varchar(45) NOT NULL,
   `rol` varchar(45) NOT NULL,
   PRIMARY KEY (`idusuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
