@@ -5,6 +5,7 @@
  */
 package com.profeco.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -53,8 +54,10 @@ public class Producto implements Serializable {
     @Basic(optional = false)
     @Column(name = "oferta")
     private double oferta;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idproducto")
     private Collection<Inconsistencias> inconsistenciasCollection;
+    @JsonIgnore
     @JoinColumn(name = "idcomercio", referencedColumnName = "idcomercio")
     @ManyToOne(optional = false)
     private Comercio idcomercio;

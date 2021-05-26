@@ -13,7 +13,7 @@ import com.profeco.entidades.Producto;
 import com.profeco.entidades.Sancion;
 import com.profeco.entidades.Usuario;
 import java.lang.reflect.Type;
-
+import java.util.ArrayList;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -26,11 +26,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("profeco")
 public class ProfecoREST {
-
 
     @PostMapping("login")
     public ResponseEntity<String> logear(@RequestBody Usuario usuario) {
@@ -49,16 +47,16 @@ public class ProfecoREST {
                 e.printStackTrace();
             }
             return ResponseEntity.ok(token);
-	}
+        }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        
-    }  
-    
+
+    }
+
     @PostMapping("subirProducto")
-    public ResponseEntity subirProducto(@RequestBody String producto){
+    public ResponseEntity subirProducto(@RequestBody String producto) {
         System.out.println("Agregando oprooducto " + producto);
         ProductoJpaController jpaController = new ProductoJpaController();
-        Gson gson =  new Gson();
+        Gson gson = new Gson();
         Producto p = gson.fromJson(producto, Producto.class);
         try {
             jpaController.create(p);
@@ -67,14 +65,13 @@ public class ProfecoREST {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-    
-    
+
     @GetMapping("desplegarSanciones")
-    public ResponseEntity<String> desplegarSanciones(){
+    public ResponseEntity<String> desplegarSanciones() {
         try {
             System.out.println("Nuevo metodo desplegar sanciones");
             SancionJpaController jpaController = new SancionJpaController();
-            List<Sancion> sanciones =jpaController.findSancionEntities();
+            List<Sancion> sanciones = jpaController.findSancionEntities();
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonString = objectMapper.writeValueAsString(sanciones);
             return ResponseEntity.ok(jsonString);
@@ -83,14 +80,12 @@ public class ProfecoREST {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-    
-    
-    
+
     @PostMapping("subirSancion")
-    public ResponseEntity subirSancion(@RequestBody String sancion){
+    public ResponseEntity subirSancion(@RequestBody String sancion) {
         System.out.println("Agregando sancion " + sancion);
         SancionJpaController jpaController = new SancionJpaController();
-        Gson gson =  new Gson();
+        Gson gson = new Gson();
         Sancion p = gson.fromJson(sancion, Sancion.class);
         try {
             jpaController.create(p);
@@ -99,7 +94,29 @@ public class ProfecoREST {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-    
+
+    @GetMapping("desplegarOfertas")
+    public ResponseEntity<String> desplegarOferta() {
+        try {
+            System.out.println("mostrando ofertas");
+            ProductoJpaController jpaController = new ProductoJpaController();
+            List<Producto> productos = jpaController.findProductoEntities();
+            List<Producto> ofertas = new ArrayList<>();
+            for (Producto producto : productos) {
+                if (producto.getOferta()> 0.000 && producto.getOferta() <= 1) {
+                    ofertas.add(producto);
+                }
+            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(ofertas);
+            return ResponseEntity.ok(jsonString);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+    }
+
 //    @GetMapping("ofertas")
 //    public ResponseEntity<String> obtenerOfertas() {
 //        if (!daoProducto.obtenerOfertas().isEmpty()) {
@@ -109,7 +126,6 @@ public class ProfecoREST {
 //        }
 //        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 //    }
-        
     /*
     @GetMapping("consumidor/{nombreProducto}")
     public ResponseEntity<List<Producto>> compararProductos(@PathVariable("nombreProducto")String nombre){
@@ -133,6 +149,5 @@ public class ProfecoREST {
         UsuarioJpaController jpa = new UsuarioJpaController();
             return ResponseEntity.ok(jpa.findUsuario(1));
     }
-    */
-       
+     */
 }
