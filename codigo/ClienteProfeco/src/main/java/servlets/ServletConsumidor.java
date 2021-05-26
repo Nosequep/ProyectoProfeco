@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import com.profeco.controladores.CalificacionJpaController;
 import com.profeco.controladores.ComercioJpaController;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.profeco.controladores.ProductoJpaController;
 import com.profeco.controladores.exceptions.NonexistentEntityException;
+import com.profeco.entidades.Calificacion;
 import com.profeco.entidades.Comercio;
 import com.profeco.entidades.Producto;
 import java.io.PrintWriter;
@@ -32,6 +34,7 @@ import java.util.logging.Logger;
 public class ServletConsumidor extends HttpServlet {
     ProductoJpaController consultas = new ProductoJpaController();
     ComercioJpaController consultarComercios = new ComercioJpaController();
+    CalificacionJpaController consultaCalificaciones = new CalificacionJpaController();
     /*
         Metodo para solicitudes POST
      */
@@ -60,8 +63,17 @@ public class ServletConsumidor extends HttpServlet {
            
            }
            if(solicitud.equalsIgnoreCase("productoCalificado")){
-               String calificacion = req.getParameter("calificacion");
                
+               String calificacion = req.getParameter("calificacion");
+               String mensaje = req.getParameter("mensaje");
+               try{
+               Calificacion cali = new Calificacion();
+               cali.setCalificacion(Integer.parseInt(calificacion));
+               cali.setComentario(mensaje);
+               consultaCalificaciones.create(cali);
+               }catch(Exception e){
+                   Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, e);
+               }
                Comercio comercio = consultarComercios.findComercio(temp1.getIdcomercio().getIdcomercio());
                comercio.setCalificacion(Integer.parseInt(calificacion));
                try {
