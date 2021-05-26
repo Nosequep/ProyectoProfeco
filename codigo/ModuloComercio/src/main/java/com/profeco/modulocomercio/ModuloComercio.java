@@ -44,4 +44,5 @@ public class ModuloComercio {
         String jsonString = objectMapper.writeValueAsString(sanciones);
         return jsonString;
     }
+    
 }
