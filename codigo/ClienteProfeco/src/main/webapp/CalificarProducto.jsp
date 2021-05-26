@@ -12,24 +12,25 @@
         <title>Calificar producto</title>
     </head>
     <body>
-        <%Producto producto=(Producto)request.getAttribute("Producto"); %>
-<div align="center">
-<table>
-<tr>
-<td>Nombre:</td>
-<td><input id="nombre" type="text" size="20" name="nombre" value="<%= producto.getNombre() %>"></td>
-</tr>
-<tr>
-<td>Precio:</td>
-<td><input id="precio" type="text" size="20" name="precio" value="<%= producto.getPrecio() %>"></td>
-</tr>
-<tr>
-<td>Comercio:</td>
-<td><input id="comercio" type="text" size="20" name="comercio" value="<%= producto.getIdcomercio() %>"></td>
-</tr>
-</table>
-</div>
+        <%Producto producto = (Producto) request.getAttribute("Producto");%>
         <form action="consumidor" method="POST">
+            <div align="center">
+                <table>
+                    <tr>
+                        <td>Nombre:</td>
+                        <td><input id="nombre" type="text" size="20" name="nombre" value="<%= producto.getNombre()%>"></td>
+                    </tr>
+                    <tr>
+                        <td>Precio:</td>
+                        <td><input id="precio" type="text" size="20" name="precio" value="<%= producto.getPrecio()%>"></td>
+                    </tr>
+                    <tr>
+                        <td>Comercio:</td>
+                        <td><input id="comercio" type="text" size="20" name="comercio" value="<%= producto.getIdcomercio()%>"></td>
+                    </tr>
+                </table>
+            </div>
+
             <label for="calificacion">Calificar:</label>
             <select id="calificacion" name="calificacion">
                 <option value="1"> 1 </option>

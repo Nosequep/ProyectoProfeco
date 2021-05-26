@@ -22,6 +22,7 @@ import com.profeco.controladores.exceptions.NonexistentEntityException;
 import com.profeco.entidades.Calificacion;
 import com.profeco.entidades.Comercio;
 import com.profeco.entidades.Producto;
+import com.profeco.entidades.Usuario;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +48,14 @@ public class ServletConsumidor extends HttpServlet {
                    String oferta = req.getParameter("oferta");
                    String idcomercio = req.getParameter("comercio");
                    
-                   Producto temp1 = new Producto();
+                   
+           if(solicitud.equalsIgnoreCase("calificarProducto")){
+               Producto temp1 = new Producto();
                    temp1.setNombre(nombre);
                    temp1.setIdproducto(Integer.parseInt(id));
                    temp1.setPrecio(Double.parseDouble(precio));
                    temp1.setOferta(Double.parseDouble(oferta));
                    temp1.setIdcomercio(new Comercio(Integer.parseInt(idcomercio)));
-           if(solicitud.equalsIgnoreCase("calificarProducto")){
                try {
                    req.setAttribute("Producto", temp1);
                    req.getRequestDispatcher("CalificarProducto.jsp").forward(req, res);
@@ -64,13 +66,21 @@ public class ServletConsumidor extends HttpServlet {
            }
            if(solicitud.equalsIgnoreCase("productoCalificado")){
                
+               Producto temp1 = new Producto();
+                   temp1.setNombre(nombre);
+                   temp1.setPrecio(Double.parseDouble(precio));
+                   temp1.setIdcomercio(new Comercio(Integer.parseInt(idcomercio)));
+               
                String calificacion = req.getParameter("calificacion");
                String mensaje = req.getParameter("mensaje");
                try{
                Calificacion cali = new Calificacion();
                cali.setCalificacion(Integer.parseInt(calificacion));
                cali.setComentario(mensaje);
+               cali.setIdUsuario(new Usuario(3));
+               cali.setIdComercio(new Comercio (Integer.parseInt(idcomercio)));
                consultaCalificaciones.create(cali);
+                   System.out.println(consultaCalificaciones.findCalificacion(Integer.SIZE));
                }catch(Exception e){
                    Logger.getLogger(ServletConsumidor.class.getName()).log(Level.SEVERE, null, e);
                }
