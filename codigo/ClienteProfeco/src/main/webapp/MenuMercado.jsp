@@ -25,7 +25,7 @@
             <ul>
                 
                 <li><a href="AgregarProducto.jsp">Subir producto</a></li>
-                <li><a href="EliminarProducto.jsp">Quitar producto</a></li>
+                <li><a href="eliminarProducto.jsp">Quitar producto</a></li>
                 <li><a href="mercado?solicitud=desplegarSanciones">Mostrar sanciones</a></li>
                 
             </ul>

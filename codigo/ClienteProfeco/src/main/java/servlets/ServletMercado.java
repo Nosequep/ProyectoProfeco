@@ -48,16 +48,17 @@ public class ServletMercado extends HttpServlet{
           
             PrintWriter out = res.getWriter();
     
-            String nombre = req.getParameter("nombre");
-            String comercio = req.getParameter("comercio");
-            String precio = req.getParameter("precio");
-            String oferta = req.getParameter("oferta");
+
             String solicitud = req.getParameter("solicitud");
             System.out.println("Solicitud " + solicitud);
             URL url = null;
             HttpURLConnection con = null;
             String jsonInputString = null;
             if(solicitud.equals("subirProducto")){
+                String nombre = req.getParameter("nombre");
+                String comercio = req.getParameter("comercio");
+                String precio = req.getParameter("precio");
+                String oferta = req.getParameter("oferta");
                 
                 Producto producto = new Producto();
                 producto.setNombre(nombre);
@@ -75,21 +76,9 @@ public class ServletMercado extends HttpServlet{
                 con.setDoInput(true);
                 Gson gson = new Gson();
                 jsonInputString = gson.toJson(producto);
-            }
-            if(solicitud.equals("eliminarProducto")){
-                /*
-                Producto temp = new Producto();
-                temp.setNombre(nombre);
-                temp.setIdcomercio(new Comercio(Integer.parseInt(comercio)));
-                ArrayList<Producto> productos = consultas.findProductoEntities();
-                
-                for (Producto producto : productos) {
-                    if(producto.getNombre().equalsIgnoreCase(temp.getNombre()) && producto.getIdcomercio() == temp.getIdcomercio()){
-                        consultas.destroy(producto.getIdproducto());
-                        productos.remove(producto);
-                        break;
-                    }
-                }
+            }else if(solicitud.equals("eliminarProducto")){
+                String id = req.getParameter("id");
+                Producto producto = new Producto(Integer.parseInt(id));
                 url = new URL("http://localhost:9999/profeco/eliminarProducto");
                 con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
@@ -99,9 +88,9 @@ public class ServletMercado extends HttpServlet{
                 con.setDoOutput(true);
                 con.setDoInput(true);
                 Gson gson = new Gson();
-                jsonInputString = gson.toJson(temp);
-                */
+                jsonInputString = gson.toJson(producto);
             }
+            
             //Pasar los datos al url
             System.out.println("Json " + jsonInputString);
             try (OutputStream os = con.getOutputStream()) {
@@ -126,8 +115,8 @@ public class ServletMercado extends HttpServlet{
                     responseContent.append(line);
                 }
                 reader.close();
-                 System.out.println(responseContent.toString());
-                 System.out.println("Menu dispatcher");
+                System.out.println(responseContent.toString());
+                System.out.println("Menu dispatcher");
                 dispatcher = req.getRequestDispatcher("MenuMercado.jsp");
                 dispatcher.forward(req, res);
             }

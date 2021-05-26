@@ -70,6 +70,7 @@ public class ServletLogin extends HttpServlet{
             }
             
             int status = con.getResponseCode();
+            System.out.println("Codigo respuesta: " + status);
             //Respuesta de la solicitud
             if(status > 299){
                 //Cuando un error

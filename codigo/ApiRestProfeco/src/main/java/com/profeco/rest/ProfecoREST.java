@@ -4,20 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.profeco.controladores.ProductoJpaController;
-import com.profeco.controladores.SancionJpaController;
-import com.profeco.entidades.Producto;
-import com.profeco.entidades.Sancion;
 import com.profeco.entidades.Usuario;
-import java.lang.reflect.Type;
+import com.profeco.modulocomercio.ModuloComercio;
+import com.profeco.moduloprofeco.ModuloProfeco;
 
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,11 +48,10 @@ public class ProfecoREST {
     @PostMapping("subirProducto")
     public ResponseEntity subirProducto(@RequestBody String producto){
         System.out.println("Agregando oprooducto " + producto);
-        ProductoJpaController jpaController = new ProductoJpaController();
-        Gson gson =  new Gson();
-        Producto p = gson.fromJson(producto, Producto.class);
+        
         try {
-            jpaController.create(p);
+            ModuloComercio modulo = new ModuloComercio();
+            modulo.subirProducto(producto);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -71,15 +61,12 @@ public class ProfecoREST {
     
     @GetMapping("desplegarSanciones")
     public ResponseEntity<String> desplegarSanciones(){
+        System.out.println("Desplegar sanciones");
         try {
-            System.out.println("Nuevo metodo desplegar sanciones");
-            SancionJpaController jpaController = new SancionJpaController();
-            List<Sancion> sanciones =jpaController.findSancionEntities();
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonString = objectMapper.writeValueAsString(sanciones);
+            ModuloComercio modelo = new ModuloComercio();
+            String jsonString = modelo.desplegarSanciones();
             return ResponseEntity.ok(jsonString);
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(ProfecoREST.class.getName()).log(Level.SEVERE, null, ex);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
@@ -89,11 +76,21 @@ public class ProfecoREST {
     @PostMapping("subirSancion")
     public ResponseEntity subirSancion(@RequestBody String sancion){
         System.out.println("Agregando sancion " + sancion);
-        SancionJpaController jpaController = new SancionJpaController();
-        Gson gson =  new Gson();
-        Sancion p = gson.fromJson(sancion, Sancion.class);
         try {
-            jpaController.create(p);
+            ModuloProfeco modulo = new ModuloProfeco();
+            modulo.subirSanciones(sancion);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    
+    @PostMapping("eliminarProducto")
+    public ResponseEntity eliminarProducto(@RequestBody String idProducto){
+        System.out.println("Eliminando producto " + idProducto);
+        try {
+            ModuloComercio modulo = new ModuloComercio();
+            modulo.eliminarProducto(idProducto);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

@@ -14,10 +14,8 @@
     <body>
         <h2>Eliminar producto</h2>
         <form action="mercado" method="POST">
-            <label for="comercio">Comercio:</label>
-            <input type="text" name="comercio"><br><br>
-            <label for="nombre">Nombre:</label>
-            <input type="text" name="nombre"><br><br>
+            <label for="id">Id:</label>
+            <input type="text" name="id"><br><br>
             <input id="solicitud" name ="solicitud" type="hidden" value="eliminarProducto">
             <input type="submit" value="submit">
         </form>
