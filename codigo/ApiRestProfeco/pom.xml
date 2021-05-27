@@ -59,7 +59,7 @@
             </dependency>
 	 <dependency>
 	  <groupId>${project.groupId}</groupId>
-	  <artifactId>ModuloProfeco</artifactId>
+	  <artifactId>ModuloComercio</artifactId>
 	  <version>1.0-SNAPSHOT</version>
 	 </dependency>
 	 <dependency>
@@ -69,7 +69,7 @@
 	 </dependency>
 	 <dependency>
 	  <groupId>${project.groupId}</groupId>
-	  <artifactId>ModuloComercio</artifactId>
+	  <artifactId>ModuloProfeco</artifactId>
 	  <version>1.0-SNAPSHOT</version>
 	 </dependency>
 	 <dependency>
