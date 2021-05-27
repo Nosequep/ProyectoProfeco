@@ -16,6 +16,10 @@
         <servlet-name>servlet4</servlet-name>
         <servlet-class>servlets.ServletProfeco</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>servlet5</servlet-name>
+        <servlet-class>servlets.ServletNotificaciones</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>servlet1</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>servlet4</servlet-name>
         <url-pattern>/profeco</url-pattern>
+    </servlet-mapping>
+        <servlet-mapping>
+        <servlet-name>servlet5</servlet-name>
+        <url-pattern>/notificaciones</url-pattern>
     </servlet-mapping>
     
 </web-app>
