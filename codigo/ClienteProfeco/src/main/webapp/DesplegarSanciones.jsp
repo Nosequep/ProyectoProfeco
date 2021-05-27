@@ -18,7 +18,7 @@
         <main>
             <h2 id="tituloFuncion">Lista de sanciones</h2>
             <div class="formularioTabla">
-                <form>
+                <form action="MenuMercado.jsp">
                     <table>
                         <tr>
                             <th>idSancion</th>
@@ -36,7 +36,8 @@
                                 <td>${sancion.multa}</td>
                             </tr>
                         </c:forEach>
-                    </table>   
+                    </table> 
+                    <input type="submit" value="Regresar a menu">
                 </form>
             </div>
         </main>

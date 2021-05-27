@@ -41,12 +41,6 @@
             <artifactId>gson</artifactId>
             <version>2.8.6</version>
         </dependency>
-            
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>AccesoDatosProfeco</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
@@ -70,6 +64,16 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>ModuloProfeco</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>RabitMQ</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>AccesoDatosProfeco</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

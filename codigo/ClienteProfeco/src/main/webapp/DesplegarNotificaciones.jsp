@@ -18,7 +18,7 @@
         <main>
             <h2 id="tituloFuncion">Notificaciones</h2>
             <div class="formularioTabla">
-                <form>
+                <form action="MenuConsumidor.jsp" >
                     <table>
                         <tr>
                             <th>Mensajes</th>
@@ -28,7 +28,8 @@
                                 <td>${aviso}</td>
                             </tr>
                         </c:forEach>
-                    </table>   
+                    </table> 
+                    <input type="submit" value="Regresar a menu">
                 </form>
             </div>
         </main>

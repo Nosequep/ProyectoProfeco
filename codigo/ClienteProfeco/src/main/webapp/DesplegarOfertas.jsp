@@ -18,7 +18,7 @@
         <main>
             <h2 id="tituloFuncion">Lista de productos con ofertas</h2>
             <div class="formularioTabla">
-                <form>
+                <form action="MenuConsumidor.jsp">
                     <table>
                         <tr>
                             <th>idproducto</th>
@@ -35,6 +35,7 @@
                             </tr>
                         </c:forEach>
                     </table>   
+                    <input type="submit" value="Regresar a menu">
                 </form>
             </div>
         </main>

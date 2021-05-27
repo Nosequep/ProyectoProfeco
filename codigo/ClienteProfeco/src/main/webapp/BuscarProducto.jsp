@@ -17,7 +17,7 @@
             <label for="nombre">Nombre:</label>
             <input type="text" name="nombre" id="nombre"><br><br>
             <input id="solicitud" name ="solicitud" type="hidden" value="buscarProducto">
-            <input type="submit" value="submit">
+            <input type="submit" value="Calificar producto">
         </form>
     </body>
 </html>
