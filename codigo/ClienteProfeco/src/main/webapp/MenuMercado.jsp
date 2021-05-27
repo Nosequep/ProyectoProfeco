@@ -27,7 +27,7 @@
                 <li><a href="AgregarProducto.jsp">Subir producto</a></li>
                 <li><a href="eliminarProducto.jsp">Quitar producto</a></li>
                 <li><a href="mercado?solicitud=desplegarSanciones">Mostrar sanciones</a></li>
-                 <li><a href="notificacoines?solicitud=generarAvisos">Avisos</a></li>
+                 <li><a href="notificaciones?solicitud=generarAvisos">Avisos</a></li>
                 
             </ul>
             

@@ -5,13 +5,13 @@
  */
 package com.profeco.rabitmq;
 
-import com.rabbitmq.client.CancelCallback;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.DeliverCallback;
 import com.rabbitmq.client.Delivery;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,8 +22,11 @@ import java.util.logging.Logger;
  */
 public abstract class Consumer {
     private String queue = "cola1";
-    private  Connection connection;
+    private Connection connection;
+    private List<String> mensajes;
+    
     public Consumer(){
+        this.mensajes = new ArrayList<String>();
         try {
             ConnectionFactory factory = new ConnectionFactory();
             connection = factory.newConnection();
@@ -47,13 +50,14 @@ public abstract class Consumer {
         channel.basicConsume(queueName, true, (String string, Delivery message) -> {
             String m = new String(message.getBody(), "UTF-8");
             System.out.println("I just received a message = " + m);
-            this.funcionExtra(m);
+            this.mensajes.add(m);
+            this.funcionExtra(this.mensajes);
         }, consumerTag -> {});
 
 
     }
     
-    public abstract void funcionExtra(String mensaje);
+    public abstract void funcionExtra(List<String> mensajes);
     
     public void close() throws IOException{
         this.connection.close();

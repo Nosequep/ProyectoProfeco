@@ -19,8 +19,9 @@
         </header>
         <nav>
             <ul>
-                <li><a href="consumidor?solicitud=desplegarOfertas">Ofertas</a></li>
                 <li><a href="BuscarProducto.jsp">Buscar productos</a></li>
+                <li><a href="consumidor?solicitud=desplegarOfertas">Ofertas</a></li>
+                <li><a href="notificaciones?solicitud=desplegarNotificaciones">Notificaciones</a></li>
             </ul>
         </nav>
         <article>
