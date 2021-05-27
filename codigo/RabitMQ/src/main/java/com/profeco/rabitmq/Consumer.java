@@ -23,10 +23,9 @@ import java.util.logging.Logger;
 public abstract class Consumer {
     private String queue = "cola1";
     private Connection connection;
-    private List<String> mensajes;
     
     public Consumer(){
-        this.mensajes = new ArrayList<String>();
+
         try {
             ConnectionFactory factory = new ConnectionFactory();
             connection = factory.newConnection();
@@ -50,14 +49,14 @@ public abstract class Consumer {
         channel.basicConsume(queueName, true, (String string, Delivery message) -> {
             String m = new String(message.getBody(), "UTF-8");
             System.out.println("I just received a message = " + m);
-            this.mensajes.add(m);
-            this.funcionExtra(this.mensajes);
+            this.funcionExtra(m);
+            this.close();
         }, consumerTag -> {});
 
 
     }
     
-    public abstract void funcionExtra(List<String> mensajes);
+    public abstract void funcionExtra(String mensaje);
     
     public void close() throws IOException{
         this.connection.close();

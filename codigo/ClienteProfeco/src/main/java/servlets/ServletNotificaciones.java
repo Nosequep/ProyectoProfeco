@@ -24,14 +24,19 @@ import javax.servlet.http.HttpServletResponse;
  * @author Lenovo
  */
 public class ServletNotificaciones  extends HttpServlet{
-    
+    private List<String> mensajes;
+            
+    public ServletNotificaciones(){
+        this.mensajes = new ArrayList<String>();
+    }
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse res){
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException{
         String solicitud = req.getParameter("solicitud");
         if(solicitud.equals("avisar")){
             String mensaje= req.getParameter("mensaje");
             Sender sender = new Sender();
             sender.enviar(mensaje);
+            sender.close();
             RequestDispatcher dispatcher;
             dispatcher = req.getRequestDispatcher("MenuMercado.jsp");
             try {
@@ -52,11 +57,12 @@ public class ServletNotificaciones  extends HttpServlet{
             Consumer consumer = new Consumer() {
 
                 @Override
-                public void funcionExtra(List<String> mensajes) {
+                public void funcionExtra(String mensaje) {
                   
                     System.out.println("Entra en la funcion extra");
                     try {
                         RequestDispatcher dispatcher;
+                        mensajes.add(mensaje);
                         req.setAttribute("avisos", mensajes);
                         System.out.println("size " + mensajes.size());
                         dispatcher = req.getRequestDispatcher("DesplegarNotificaciones.jsp");
@@ -75,7 +81,7 @@ public class ServletNotificaciones  extends HttpServlet{
             } catch (TimeoutException ex) {
                 Logger.getLogger(ServletNotificaciones.class.getName()).log(Level.SEVERE, null, ex);
             }
-
+            req.setAttribute("avisos", mensajes);
             RequestDispatcher dispatcher;
             dispatcher = req.getRequestDispatcher("DesplegarNotificaciones.jsp");
             try {
