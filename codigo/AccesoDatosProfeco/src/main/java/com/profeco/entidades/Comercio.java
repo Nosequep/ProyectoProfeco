@@ -5,7 +5,6 @@
  */
 package com.profeco.entidades;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -26,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Lenovo
+ * @author Dhtey
  */
 @Entity
 @Table(name = "comercio")

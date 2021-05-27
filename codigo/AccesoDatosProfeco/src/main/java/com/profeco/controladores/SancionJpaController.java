@@ -6,7 +6,6 @@
 package com.profeco.controladores;
 
 import com.profeco.controladores.exceptions.NonexistentEntityException;
-import com.profeco.controladores.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -21,7 +20,7 @@ import javax.persistence.Persistence;
 
 /**
  *
- * @author Lenovo
+ * @author Dhtey
  */
 public class SancionJpaController implements Serializable {
 
@@ -34,7 +33,7 @@ public class SancionJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Sancion sancion) throws PreexistingEntityException, Exception {
+    public void create(Sancion sancion) {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -50,11 +49,6 @@ public class SancionJpaController implements Serializable {
                 idcomercio = em.merge(idcomercio);
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findSancion(sancion.getIdsancion()) != null) {
-                throw new PreexistingEntityException("Sancion " + sancion + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();

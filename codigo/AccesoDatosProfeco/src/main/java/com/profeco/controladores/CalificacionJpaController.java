@@ -21,7 +21,7 @@ import javax.persistence.Persistence;
 
 /**
  *
- * @author Lenovo
+ * @author Dhtey
  */
 public class CalificacionJpaController implements Serializable {
 
