@@ -7,7 +7,9 @@ package servlets;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.profeco.controladores.ComercioJpaController;
+import com.profeco.controladores.ProductoJpaController;
+import com.profeco.controladores.exceptions.IllegalOrphanException;
+import com.profeco.controladores.exceptions.NonexistentEntityException;
 import com.profeco.entidades.Comercio;
 import com.profeco.entidades.Producto;
 import com.profeco.entidades.Sancion;
@@ -19,6 +21,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,34 +35,33 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Lenovo
  */
-
-public class ServletMercado extends HttpServlet{
+public class ServletMercado extends HttpServlet {
     /*
         Metodo para solicitudes POST
-    */
-    ComercioJpaController consultas = new ComercioJpaController();
+     */
+    ProductoJpaController consultas = new ProductoJpaController();
+
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException{
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException {
         BufferedReader reader;
         String line;
         StringBuffer responseContent = new StringBuffer();
         RequestDispatcher dispatcher;
         try {
-          
+
             PrintWriter out = res.getWriter();
-    
 
             String solicitud = req.getParameter("solicitud");
             System.out.println("Solicitud " + solicitud);
             URL url = null;
             HttpURLConnection con = null;
             String jsonInputString = null;
-            if(solicitud.equals("subirProducto")){
+            if (solicitud.equals("subirProducto")) {
                 String nombre = req.getParameter("nombre");
                 String comercio = req.getParameter("comercio");
                 String precio = req.getParameter("precio");
                 String oferta = req.getParameter("oferta");
-                
+
                 Producto producto = new Producto();
                 producto.setNombre(nombre);
                 producto.setPrecio(Double.parseDouble(precio));
@@ -76,7 +78,7 @@ public class ServletMercado extends HttpServlet{
                 con.setDoInput(true);
                 Gson gson = new Gson();
                 jsonInputString = gson.toJson(producto);
-            }else if(solicitud.equals("eliminarProducto")){
+            } else if (solicitud.equals("eliminarProducto")) {
                 String id = req.getParameter("id");
                 Producto producto = new Producto(Integer.parseInt(id));
                 url = new URL("http://localhost:9999/profeco/eliminarProducto");
@@ -90,7 +92,7 @@ public class ServletMercado extends HttpServlet{
                 Gson gson = new Gson();
                 jsonInputString = gson.toJson(producto);
             }
-            
+
             //Pasar los datos al url
             System.out.println("Json " + jsonInputString);
             try (OutputStream os = con.getOutputStream()) {
@@ -99,19 +101,19 @@ public class ServletMercado extends HttpServlet{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
+
             int status = con.getResponseCode();
             System.out.println("codigo " + status);
             //Respuesta de la solicitud
-            if(status > 299){
+            if (status > 299) {
                 //Cuando un error
                 //reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
                 dispatcher = req.getRequestDispatcher("paginaError.jsp");
-            }else{
+            } else {
                 //Cuando la solicitud es exitosa
                 //Leer lo obtenido de la respuesta
                 reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                while((line = reader.readLine()) != null){
+                while ((line = reader.readLine()) != null) {
                     responseContent.append(line);
                 }
                 reader.close();
@@ -124,15 +126,15 @@ public class ServletMercado extends HttpServlet{
             Logger.getLogger(ServletLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException{
-                BufferedReader reader;
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException {
+        BufferedReader reader;
         String line;
         StringBuffer responseContent = new StringBuffer();
         RequestDispatcher dispatcher;
         try {
-          
+
             PrintWriter out = res.getWriter();
 
             String solicitud = req.getParameter("solicitud");
@@ -140,7 +142,7 @@ public class ServletMercado extends HttpServlet{
             URL url = null;
             HttpURLConnection con = null;
             String jsonInputString = null;
-            if(solicitud.equals("desplegarSanciones")){
+            if (solicitud.equals("desplegarSanciones")) {
 
                 url = new URL("http://localhost:9999/profeco/desplegarSanciones");
                 con = (HttpURLConnection) url.openConnection();
@@ -152,27 +154,28 @@ public class ServletMercado extends HttpServlet{
                 con.setDoInput(true);
 
             }
-          
+
             int status = con.getResponseCode();
             System.out.println("codigo " + status);
             //Respuesta de la solicitud
-            if(status > 299){
+            if (status > 299) {
                 //Cuando un error
                 //reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
                 dispatcher = req.getRequestDispatcher("paginaError.jsp");
                 dispatcher.forward(req, res);
-            }else{
+            } else {
                 //Cuando la solicitud es exitosa
                 //Leer lo obtenido de la respuesta
                 reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                while((line = reader.readLine()) != null){
+                while ((line = reader.readLine()) != null) {
                     responseContent.append(line);
                 }
                 reader.close();
-                 System.out.println(responseContent.toString());
+                System.out.println(responseContent.toString());
                 String respuesta = responseContent.toString();
                 Gson gson = new Gson();
-                Type listType = new TypeToken<List<Sancion>>() {}.getType();
+                Type listType = new TypeToken<List<Sancion>>() {
+                }.getType();
                 List<Sancion> sanciones = gson.fromJson(respuesta, listType);
                 req.setAttribute("sanciones", sanciones);
                 dispatcher = req.getRequestDispatcher("DesplegarSanciones.jsp");

@@ -3,7 +3,7 @@
 -- Host: localhost    Database: profeco
 -- ------------------------------------------------------
 -- Server version	8.0.24
-USE profeco;
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -61,7 +61,7 @@ CREATE TABLE `comercio` (
   KEY `FK_idusuario_idx` (`idusuario`),
   KEY `FK_idusuario_comercio` (`idusuario`),
   CONSTRAINT `FK_idusuario_comercio` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`idusuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +124,7 @@ CREATE TABLE `producto` (
   PRIMARY KEY (`idproducto`),
   KEY `FK_idcomercio_producto_idx` (`idcomercio`),
   CONSTRAINT `FK_idcomercio_producto` FOREIGN KEY (`idcomercio`) REFERENCES `comercio` (`idcomercio`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,7 +133,7 @@ CREATE TABLE `producto` (
 
 LOCK TABLES `producto` WRITE;
 /*!40000 ALTER TABLE `producto` DISABLE KEYS */;
-INSERT INTO `producto` VALUES (1,'chetis',10,0.1,1),(2,'chetis',11,0,2),(3,'Chetones',1122,0.2,1),(4,'Chetines',350,0.1,1);
+INSERT INTO `producto` VALUES (2,'chetis',11,0,2),(3,'Chetones',1122,0.2,1),(4,'Chetines',350,0.1,1),(5,'Donitas',11,0,1),(6,'s',1,1,1),(7,'1',1,1,1),(8,'1',1,1,1),(9,'1',1,1,1),(10,'1',1,1,1),(11,'1',1,1,1);
 /*!40000 ALTER TABLE `producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,7 +145,7 @@ DROP TABLE IF EXISTS `sancion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sancion` (
-  `idsancion` int NOT NULL,
+  `idsancion` int NOT NULL AUTO_INCREMENT,
   `cabecera` varchar(45) NOT NULL,
   `descripcion` varchar(200) NOT NULL,
   `castigos` varchar(100) DEFAULT NULL,
@@ -154,7 +154,7 @@ CREATE TABLE `sancion` (
   PRIMARY KEY (`idsancion`),
   KEY `FK_idcomercio_sancion_idx` (`idcomercio`),
   CONSTRAINT `FK_idcomercio_sancion` FOREIGN KEY (`idcomercio`) REFERENCES `comercio` (`idcomercio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,6 +163,7 @@ CREATE TABLE `sancion` (
 
 LOCK TABLES `sancion` WRITE;
 /*!40000 ALTER TABLE `sancion` DISABLE KEYS */;
+INSERT INTO `sancion` VALUES (1,'Precios muy altos','Ta muy caro los chetis','Vetado pa siempre',10.199999809265137,1),(2,'1','1','1',1,1),(3,'1','1','1',1,1);
 /*!40000 ALTER TABLE `sancion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -179,7 +180,7 @@ CREATE TABLE `usuario` (
   `contrasenia` varchar(45) NOT NULL,
   `rol` varchar(45) NOT NULL,
   PRIMARY KEY (`idusuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -201,4 +202,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-23 17:23:07
+-- Dump completed on 2021-05-26 18:14:36

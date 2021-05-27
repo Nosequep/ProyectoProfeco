@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Lenovo
+ * @author Dhtey
  */
 @Entity
 @Table(name = "inconsistencias")

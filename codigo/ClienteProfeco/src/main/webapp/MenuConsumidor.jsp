@@ -14,37 +14,24 @@
         <title>Menú</title>
     </head>
     <body>
-        
-        
         <header>
             <h2> Menú Consumidor </h2>
         </header>
-        
         <nav>
             <ul>
                 <li><a href="consumidor?solicitud=desplegarOfertas">Ofertas</a></li>
-                <li><a href="">Buscar productos</a></li>
-                <li><a href="">Wishlist</a></li>
-                 <li><a href="">Calificar</a></li>
-                <li><a href="r">Reportar inconsistencia</a></li>
-               
-                
+                <li><a href="BuscarProducto.jsp">Buscar productos</a></li>
             </ul>
-            
         </nav>
-         <article>
-            
-             <h1>¡Bienvenido al menu de consumidor</h1>
+        <article>
+
+            <h1>¡Bienvenido al menu de consumidor</h1>
             <h2>Selecciona una opción de nuestro menú de navegación a la izquierda para empezar.</h2>
             <h3>¡No te vas a perder!</h3>
         </article>
-        
-        
         <footer>
-           <h5>Todos los derechos reservados.</h5>
-            
+            <h5>Todos los derechos reservados.</h5>
         </footer>
-        
     </body>
 </html>
 
